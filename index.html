@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>B2 Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: institutional and exact, like a university language school's own study portal
+   IDEA: the module's assessment calendar — a timetable of exams you work through in order
+   PICTURE: home = the module timeline (PT1 → PT2 → PT3 → EOM → Proficiency); pack = the live study card / exam sheet
+   COLOUR+TYPE: white paper, ink #0e1116, school cobalt #2340d8, marking green/red only for answers; Newsreader 600 headings, Inter text, IBM Plex Sans Arabic
+   LAYOUT: hairline header, 1120px frame, timeline band, pack page with breadcrumb, facts rule, progress panel, underline tabs */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#0f1115);--ink:light-dark(#0e1116,#eceef2);--mut:light-dark(#5b6170,#9aa1ad);--line:light-dark(#e3e5ea,#262a33);--card:light-dark(#f5f6f8,#171a20);--pri:light-dark(#2340d8,#7d93ff);--prib:light-dark(#eef1fd,#1a2040);--onpri:light-dark(#fff,#0f1115);--ok:light-dark(#157347,#4cc38a);--okbg:light-dark(#e9f6ef,#13291e);--bad:light-dark(#c8321f,#ff6b57);--badbg:light-dark(#fcecea,#331a17)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;overflow-x:clip;font-feature-settings:"tnum" 1,"cv11" 1}
+[dir=rtl] body{font-family:"IBM Plex Sans Arabic",Inter,system-ui,sans-serif}
+.en{font-family:Inter,system-ui,sans-serif}
+.frame{max-width:1120px;margin:0 auto;padding-inline:max(4vw,16px)}
+h1,h2,h3{font-family:Newsreader,Georgia,serif;font-weight:600;letter-spacing:-.01em;margin:0}
+[dir=rtl] :is(h1,h2,h3){font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:700;letter-spacing:0}
+h1{font-size:clamp(34px,5.4vw,52px);line-height:1.05;text-wrap:balance}
+h2{font-size:clamp(24px,3.2vw,30px);line-height:1.15}
+h3{font-size:19px;line-height:1.25}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+/* header */
+.top{border-bottom:1px solid var(--line);background:var(--bg)}
+.top .frame{display:flex;align-items:center;gap:16px;min-height:64px;flex-wrap:wrap}
+.mark{text-align:start;display:flex;align-items:center;gap:10px;margin-inline-end:auto;text-decoration:none;color:inherit;border:0;background:none;padding:0}
+.mark b{font:600 22px/1 Newsreader,Georgia,serif}
+.mark small{display:block;font:500 12px/1 Inter,sans-serif;color:var(--mut);margin-top:3px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;padding:3px;gap:2px}
+.seg button{border:0;background:none;border-radius:6px;padding:6px 12px;min-height:36px;font-size:14px;font-weight:600;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+/* home */
+.intro{padding:clamp(36px,6vw,72px) 0 28px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end}
+.eyebrow{color:var(--pri);font-weight:600;font-size:14px;margin-bottom:12px}
+.lead{color:var(--mut);font-size:18px;margin:14px 0 0;max-width:60ch}
+.intro .side{color:var(--mut);font-size:15px;border-inline-start:2px solid var(--pri);padding-inline-start:16px}
+.intro .side b{color:var(--ink);display:block;font-size:15px}
+.tl{list-style:none;margin:0 0 8px;padding:28px 0 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;position:relative}
+.tl::before{content:"";position:absolute;top:39px;inset-inline:0;height:2px;background:var(--line)}
+.tl li{position:relative;padding-inline-end:14px}
+.tl .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);background:var(--bg);position:relative;z-index:1;display:grid;place-items:center}
+.tl li.on .dot{border-color:var(--pri);background:var(--pri)}
+.tl li.on .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--onpri)}
+.tl .st{display:block;margin-top:14px;font-size:12px;font-weight:600;color:var(--mut)}
+.tl li.on .st{color:var(--pri)}
+.tl .nm{display:block;font:600 22px/1.15 Newsreader,Georgia,serif;margin-top:4px}
+[dir=rtl] .tl .nm{font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:700;font-size:20px}
+.tl .ty{display:block;font-size:14px;color:var(--mut);margin-top:2px}
+.tl .sc{display:block;font-size:14px;margin-top:10px;color:var(--ink)}
+.tl a,.tl .ghost{display:inline-flex;align-items:center;margin-top:14px;min-height:40px;padding:0 14px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none}
+.tl a{background:var(--pri);color:var(--onpri)}
+.tl .ghost{border:1px dashed var(--line);color:var(--mut)}
+.feat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);margin-top:48px}
+.feat div{padding:22px 20px 26px 0}
+[dir=rtl] .feat div{padding:22px 0 26px 20px}
+.feat b{display:block;font-weight:600;margin-bottom:4px}
+.feat span{color:var(--mut);font-size:15px}
+.feat i{display:block;font:600 13px/1 Inter,sans-serif;font-style:normal;color:var(--pri);margin-bottom:12px}
+/* pack */
+.crumb{padding:22px 0 0;font-size:14px;color:var(--mut)}
+.crumb button{border:0;background:none;padding:0;color:var(--pri);font-weight:600;min-height:32px}
+.phead{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:36px;padding:14px 0 26px;align-items:start}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-block:1px solid var(--ink);margin-top:22px}
+.facts div{padding:12px 14px 12px 0}
+[dir=rtl] .facts div{padding:12px 0 12px 14px}
+.facts b{display:block;font:600 28px/1.1 Newsreader,Georgia,serif}
+.facts span{font-size:13px;color:var(--mut)}
+.scope{margin-top:16px;font-size:15px}
+.scope div{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.scope dt{font-weight:600}
+.prog{background:var(--card);border-radius:12px;padding:20px}
+.prog h3{font-size:17px;margin-bottom:12px}
+.mrow{display:grid;grid-template-columns:minmax(8.5em,auto) minmax(0,1fr) 3.2em;white-space:nowrap;gap:10px;align-items:center;font-size:14px;margin:8px 0}
+.mrow .tr{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.mrow .tr i{display:block;height:100%;background:var(--pri)}
+.mrow b{text-align:end;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.kpis b{display:block;font:600 24px/1.1 Newsreader,Georgia,serif}
+.kpis span{font-size:12.5px;color:var(--mut)}
+.tabs{position:sticky;top:0;z-index:6;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs .frame{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;border:0;background:none;padding:0 14px;min-height:50px;font-weight:600;font-size:15px;color:var(--mut);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--pri)}
+.tabs button .n{display:inline-block;min-width:20px;padding:0 6px;margin-inline-start:6px;border-radius:10px;background:var(--bad);color:#fff;font-size:12px;line-height:20px}
+.pane{padding:26px 0 56px;max-width:820px}
+.pane.wide{max-width:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+.chips button{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 12px;min-height:38px;font-size:14px;font-weight:500}
+.chips button.on{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:0 16px;min-height:44px;font-weight:600;font-size:15px}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:var(--onpri)}
+.btn.sm{min-height:34px;padding:0 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--mut);font-size:14px}
+.end{margin-inline-start:auto}
+/* flashcard */
+.thin{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:14px}
+.thin i{display:block;height:100%;background:var(--pri);transition:width .25s}
+.fc{border:1px solid var(--line);border-radius:14px;padding:30px 28px 46px;min-height:320px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;position:relative;background:var(--bg);box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(14,17,22,.25)}
+.fc .w{font:600 clamp(36px,8vw,56px)/1.02 Newsreader,Georgia,serif}
+.fc .pos{color:var(--mut);font-size:14px;margin-top:8px}
+.fc .m{font-weight:600;font-size:22px;margin-top:14px;color:var(--pri)}
+.fc .def{margin-top:4px;color:var(--mut)}
+.fc .ex{margin-top:14px;font-family:Newsreader,Georgia,serif;font-size:19px;font-style:italic}
+.fc .frm{margin-top:12px;font-size:14px;color:var(--mut)}
+.fc .foot{position:absolute;bottom:14px;inset-inline:28px;display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
+.fc .known{color:var(--ok);font-weight:600}
+/* word list */
+.search{width:100%;max-width:420px;border:1px solid var(--line);border-radius:8px;padding:0 14px;min-height:46px;font-size:16px;background:var(--bg)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{font-size:13px;color:var(--mut);font-weight:600;text-align:start;padding:10px 10px 10px 0;border-bottom:1px solid var(--ink)}
+td{padding:12px 10px 12px 0;border-bottom:1px solid var(--line);vertical-align:top;text-align:start}
+td .wd{font-weight:600}
+td .ps{display:block;font-size:12.5px;color:var(--mut)}
+td .ex{font-family:Newsreader,Georgia,serif;font-style:italic;font-size:16px}
+.say{border:1px solid var(--line);background:var(--bg);border-radius:6px;width:30px;height:30px;padding:0;display:inline-grid;place-items:center;vertical-align:middle;margin-inline-start:6px}
+.say svg{width:14px;height:14px}
+/* questions */
+.qhead{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--mut);margin-bottom:10px;flex-wrap:wrap}
+.qhead b{color:var(--ink);font-weight:600}
+.stem{font:500 21px/1.45 Newsreader,Georgia,serif;margin:0 0 16px}
+.stem u{text-decoration:none;display:inline-block;min-width:80px;border-bottom:1.5px solid var(--ink);margin:0 4px}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:start;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:12px 14px;margin:8px 0;min-height:50px;font-size:16px;transition:border-color .15s}
+.opt:hover{border-color:var(--mut)}
+.opt .k{flex:none;width:26px;height:26px;border-radius:6px;border:1px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:600;color:var(--mut)}
+.opt.sel{border-color:var(--pri);background:var(--prib)}
+.opt.sel .k{background:var(--pri);border-color:var(--pri);color:var(--onpri)}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.ok .k{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.opt.bad .k{background:var(--bad);border-color:var(--bad);color:#fff}
+.verdict{display:flex;align-items:baseline;gap:10px;margin:20px 0 6px;font-weight:700;font-size:17px}
+.verdict.ok{color:var(--ok)}.verdict.bad{color:var(--bad)}
+.full{font-size:15px;color:var(--mut)}
+.full b{color:var(--ink);font-weight:600}
+.why{list-style:none;margin:10px 0 0;padding:0;border-top:1px solid var(--line)}
+.why li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.why li .ic{font-weight:700;color:var(--bad)}
+.why li.ok .ic{color:var(--ok)}
+.why li.mine{background:linear-gradient(90deg,var(--badbg),transparent 70%)}
+[dir=rtl] .why li.mine{background:linear-gradient(-90deg,var(--badbg),transparent 70%)}
+.why .s{color:var(--mut);font-size:14px}
+.kbd{font-size:12.5px;color:var(--mut);margin-top:10px}
+.kbd kbd{font:600 12px Inter,sans-serif;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 5px}
+.result{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:center;padding:6px 0 18px;border-bottom:1px solid var(--line)}
+.score{font:600 clamp(72px,16vw,112px)/.9 Newsreader,Georgia,serif;color:var(--pri)}
+.result p{margin:6px 0 0;color:var(--mut)}
+.rev{margin-top:10px}
+.rev details{border-bottom:1px solid var(--line);padding:12px 0}
+.rev summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px}
+.rev summary::-webkit-details-marker{display:none}
+.rev summary .ic{font-weight:700;color:var(--bad)}
+.rev details.ok summary .ic{color:var(--ok)}
+.rev .ans{font-size:14px;color:var(--mut);margin-top:2px}
+.rev .ans b{color:var(--ink)}
+.rev .body{padding:6px 0 0 36px}
+[dir=rtl] .rev .body{padding:6px 36px 0 0}
+/* exam */
+.exbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 16px;border:1px solid var(--line);border-radius:12px;margin-bottom:18px;position:sticky;top:58px;background:var(--bg);z-index:4}
+.timer{font:600 26px/1 Newsreader,Georgia,serif}
+.timer.low{color:var(--bad)}
+.pal{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;margin:0 0 18px}
+.pal button{border:1px solid var(--line);background:var(--bg);border-radius:6px;min-height:34px;font-size:13px;font-weight:600;padding:0}
+.pal button.a{background:var(--prib);border-color:var(--pri);color:var(--pri)}
+.pal button.c{outline:2px solid var(--ink);outline-offset:1px}
+.confirm{border:1px solid var(--bad);background:var(--badbg);border-radius:10px;padding:14px;margin-top:14px}
+.examstart{border:1px solid var(--line);border-radius:14px;padding:26px}
+.examstart ul{padding-inline-start:20px;color:var(--mut);margin:12px 0 18px}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:30px;color:var(--mut);text-align:center}
+.mlist{border-top:1px solid var(--line);margin-top:16px}
+.mlist div{padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.mlist .s{color:var(--mut);font-size:13px}
+/* grammar */
+.gram h3{margin:28px 0 8px}
+.gram p{margin:6px 0}
+.gram table{margin-top:6px}
+.ex1{display:block;margin:6px 0;padding:4px 12px;border-inline-start:2px solid var(--line);font-family:Newsreader,Georgia,serif;font-size:17px;text-align:left}
+.ex1.y{border-color:var(--ok)}.ex1.n{border-color:var(--bad);text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:1px}
+footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px}
+footer .frame{padding-block:22px 40px;display:flex;gap:20px;justify-content:space-between;flex-wrap:wrap}
+[hidden]{display:none!important}
+@media(max-width:900px){.intro,.phead{grid-template-columns:minmax(0,1fr);gap:22px}.feat{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+.tl{grid-template-columns:minmax(0,1fr);padding-top:8px}.tl::before{top:8px;bottom:8px;inset-inline-start:11px;inset-inline-end:auto;width:2px;height:auto}
+.tl li{display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:16px;padding:0 0 26px}.tl li>*:not(.dot){grid-column:2}.tl .dot{grid-row:1/span 6}.tl .st{margin-top:2px}
+.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.facts div:nth-child(n+3){border-top:1px solid var(--line)}
+.pal{grid-template-columns:repeat(9,minmax(0,1fr))}.exbar{top:50px}
+.result{grid-template-columns:minmax(0,1fr);gap:8px}
+table.stack thead{display:none}table.stack tr{display:grid;padding:12px 0;border-bottom:1px solid var(--line)}table.stack td{border:0;padding:2px 0}
+}
+@media(max-width:520px){.feat{grid-template-columns:minmax(0,1fr)}.fc{padding:24px 20px 46px}.fc .foot{inset-inline:20px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header class="top"><div class="frame">
+<button class="mark" id="home-link" aria-label="B2 Prep"><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M8 21.5V10.5h5.2c2.3 0 3.6 1.1 3.6 2.8 0 1.2-.7 2-1.7 2.3 1.3.3 2.1 1.2 2.1 2.6 0 2-1.5 3.3-4 3.3H8zm2.6-6.6h2.3c1 0 1.6-.5 1.6-1.3 0-.8-.6-1.3-1.6-1.3h-2.3v2.6zm0 4.6h2.6c1.1 0 1.7-.5 1.7-1.4s-.6-1.4-1.7-1.4h-2.6v2.8z" fill="var(--bg)"/><rect x="19.5" y="18.6" width="4.5" height="2.9" rx="1" fill="#2340d8"/></svg><span><b>B2 Prep</b><small id="tagline"></small></span></button>
+<div class="seg" id="lang" role="group" aria-label="Language"><button data-l="tr">TR</button><button data-l="en">EN</button><button data-l="ar" lang="ar">العربية</button></div>
+</div></header>
+
+<main id="home" hidden>
+<section class="frame">
+<div class="intro"><div><div class="eyebrow" id="h-kick"></div><h1 id="h-h1"></h1><p class="lead" id="h-lead"></p></div><div class="side" id="h-side"></div></div>
+<h2 id="h-tl" style="font-size:20px;margin-top:10px"></h2>
+<ol class="tl" id="tl"></ol>
+<div class="feat" id="feat"></div>
+</section>
+</main>
+
+<main id="packv" hidden>
+<div class="frame">
+<div class="crumb" id="crumb"></div>
+<div class="phead"><div><div class="eyebrow" id="kick"></div><h1 id="h1"></h1><p class="lead" id="lead"></p><div class="facts" id="facts"></div><dl class="scope" id="scope"></dl></div><aside class="prog" id="prog"></aside></div>
+</div>
+<nav class="tabs"><div class="frame" role="tablist" id="tabs"></div></nav>
+<div class="frame">
+<section class="pane" id="p-cards"><div class="chips" id="cf"></div><div class="thin"><i id="cbar"></i></div><div class="fc" id="card" tabindex="0" role="button"></div>
+<div class="row"><button class="btn" id="prev"></button><button class="btn" id="flip"></button><button class="btn pri" id="next"></button><span class="muted end" id="cc"></span></div>
+<div class="row"><button class="btn" id="shuf"></button><button class="btn" id="know"></button><button class="btn" id="sayc" hidden></button></div>
+<p class="kbd" id="kbd1"></p></section>
+<section class="pane wide" id="p-list" hidden><div class="row" style="margin:0 0 14px"><input class="search" id="q" type="search"><span class="muted" id="lc"></span></div><div class="chips" id="lf"></div><table class="stack" id="wl"></table></section>
+<section class="pane" id="p-practice" hidden><div class="chips" id="tf"></div><div id="qa"></div><p class="kbd" id="kbd2"></p></section>
+<section class="pane" id="p-exam" hidden><div id="ex"></div></section>
+<section class="pane gram" id="p-gram" hidden></section>
+<section class="pane" id="p-mist" hidden><div id="mb"></div></section>
+</div>
+</main>
+<footer><div class="frame"><span id="foot"></span><span id="foot2"></span></div></footer>
+<script>
+{
+/* ---------- WORDS: ch, word, pos, TR, AR, EN definition, example, answer form, word forms ---------- */
+const V1=[
+["U1 C1","sense","n","his, duygu","إحساس، شعور","a general feeling or understanding","All football fans want to feel a real ___ of belonging to their team.","sense","sense (v)"],
+["U1 C1","cheer on","phr","tezahüratla desteklemek","يشجّع بالهتاف","shout encouragement to a team","Fans filled every seat available to ___ the team.","cheer on","≠ boo"],
+["U1 C1","devoted","adj","kendini adamış, sadık","مُخلص، متفانٍ","having great love and support for sb/sth","As a ___ fan, my cousin doesn't miss a game of his team.","devoted","devote (v), devotion (n) · devoted to sth"],
+["U1 C1","defeat","n","yenilgi / yenmek","هزيمة / يهزم","failure to win; to win against someone","Brazil suffered a crushing ___ against Germany in 2014.","defeat","≠ victory · a heavy/crushing defeat"],
+["U1 C1","hatred","n","nefret","كراهية","a very strong feeling of dislike","Celebrate your team's victories without showing ___ for rival fans.","hatred","hate (v) · hatred of/for/towards"],
+["U1 C1","loyalty","n","sadakat","ولاء","constant support of sb/sth","The player's ___ to his club was rewarded when he was named captain.","loyalty","loyal, disloyal (adj) · loyalty to"],
+["U1 C1","unite","v","birleştirmek","يوحّد","join together as a group","The fall of the Berlin Wall in 1989 ___ East and West Germany.","united","unity (n) · ≠ divide"],
+["U1 C1","fierce","adj","şiddetli, sert","شرس، حادّ","with a lot of energy and strong feelings","There is ___ rivalry between Galatasaray and Fenerbahçe.","fierce","= intense · fierce rivalry/criticism"],
+["U1 C1","transform","v","dönüştürmek","يحوّل","change completely","The company has been ___ from a family business into a huge operation.","transformed","transformation (n)"],
+["U1 C1","associate","v","ilişkilendirmek","يربط ذهنيًا","connect people or things in your mind","The university is ___ with academic excellence.","associated","association (n) · associate with"],
+["U1 C1","incident","n","olay (çoğu zaman kötü)","حادثة","an unusual, important or violent event","A fan was seriously injured in an ___ of hooliganism last night.","incident","a serious/major incident"],
+["U1 C1","occasion","n","özel gün, vesile","مناسبة","a particular time when something happens","Graduation is a proud ___ for students and their families.","occasion","occasional (adj), occasionally (adv)"],
+["U1 C1","suspend","v","askıya almak, ertelemek","يعلّق، يوقف مؤقتًا","stop something for a short time","The referee decided to ___ the match because of the bad weather.","suspend","suspension (n)"],
+["U1 C1","anticipation","n","beklenti, heyecanla bekleme","ترقّب","expecting something to happen","The ___ of a goal makes football matches so exciting.","anticipation","anticipate (v)"],
+["U1 C1","chant","v","tempo tutarak bağırmak","يهتف بشعار متكرر","sing or shout a phrase again and again","Fans love to ___ and sing together in the stadium.","chant","chant (n)"],
+["U1 C1","roots","n","kökler","جذور","your connection to where your family comes from","After 20 years in Germany, I still feel my ___ are in Turkey.","roots","= origins"],
+["U1 C1","existence","n","varoluş, var olma","وجود","the state of being real or living","Human ___ on Earth dates back thousands of years.","existence","exist (v)"],
+["U1 C1","evolution","n","evrim, gelişim","تطوّر","slow, steady change and development","Darwin's theory of ___ is not supported by some scientists.","evolution","evolve (v) · gradual evolution"],
+["U1 C1","meaningless","adj","anlamsız","بلا معنى","having no importance or purpose","Life can seem ___ when we don't have clear goals.","meaningless","meaning (n), meaningful (adj)"],
+["U1 C1","tribe","n","kabile","قبيلة","a social group sharing language, culture etc.","The Native American ___ lived in harmony with nature.","tribe","tribal (adj)"],
+["U1 C2","spectator","n","seyirci","متفرّج","a person watching an event","The new stadium will hold 75,000 ___.","spectators","= audience"],
+["U1 C2","highly","adv","son derece","للغاية","very, to a large degree","A ___ skilled teacher can make learning fun and easy.","highly","highly skilled / highly important"],
+["U1 C2","annual","adj","yıllık","سنوي","happening once a year","The Champions League final is an ___ event that attracts millions of fans.","annual","annually (adv)"],
+["U1 C2","venue","n","mekân, etkinlik yeri","مكان الحدث","a place for an organized event","The ___ for the concert was a large stadium.","venue","= place"],
+["U1 C2","genuine","adj","gerçek, hakiki, samimi","حقيقي، أصيل","real; not artificial","The restaurant serves ___ Italian food.","genuine","genuinely (adv)"],
+["U1 C2","insist","v","ısrar etmek","يصرّ","state firmly that sth is true","Greg ___ on his innocence.","insisted","insistent (adj) · insist on"],
+["U1 C2","enhance","v","geliştirmek, artırmak","يعزّز، يحسّن","improve quality or strength","Doing exercise can significantly ___ the quality of your life.","enhance","enhancement (n) · performance-enhancing"],
+["U1 C2","admit","v","itiraf etmek; içeri kabul etmek","يعترف؛ يُدخل","agree sth is true; allow to enter","She ___ that she made a mistake.","admitted","≠ deny"],
+["U1 C2","determine","v","belirlemek","يحدّد","control or decide what will happen","The tests will help the doctors ___ what treatment to use.","determine","= decide"],
+["U1 C2","relatively","adv","görece, nispeten","نسبيًا","in comparison with similar things","It is ___ easy for newcomers to learn the basics.","relatively",""],
+["U1 C2","accusation","n","suçlama","اتهام","statement that someone did sth wrong","She was arrested for making false ___ against her former employer.","accusations","accuse sb of (v) · make an accusation"],
+["U1 C2","detect","v","tespit etmek","يكتشف","notice or discover sth hard to see","Some cancers can be cured if they are ___ early.","detected","detective (n)"],
+["U1 C2","classify","v","sınıflandırmak","يصنّف","decide what group sth belongs to","The librarian ___ the new books according to their genres.","classified","classification (n) · classify as"],
+["U1 C2","considerably","adv","önemli ölçüde","بشكل كبير","to a large, noticeable degree","Prices are ___ higher than they were a year ago.","considerably","considerable (adj)"],
+["U1 C2","opponent","n","rakip; karşıt","خصم، منافس","person you play against / who is against sth","In the second game, her ___ hurt her leg and had to retire.","opponent","≠ partner / proponent"],
+["U1 C2","peak","n","zirve","ذروة","the point when sb/sth is best","Most athletes reach their ___ in their mid-20s.","peak","be at its peak / reach a peak"],
+["U1 C2","issue","v","(resmî olarak) vermek, düzenlemek","يُصدر","give sth officially","The US State Department ___ millions of passports each year.","issues","= grant"],
+["U1 C2","competitive","adj","rekabetçi","تنافسي","involving competition","___ sports encourage children to work together as a team.","Competitive","compete (v), competition, competitor (n)"],
+["U1 C2","expression","n","ifade","تعبير","showing what you think or feel","Freedom of ___ is a basic human right.","expression","express (v)"],
+["U1 C2","hazard","n","tehlike, risk","خطر","something dangerous","Growing pollution is a serious health ___.","hazard","hazardous (adj) · health/fire hazard"],
+["U1 C2","specialize","v","uzmanlaşmak","يتخصّص","become an expert in one area","I hope to ___ in pediatrics.","specialize","specialist (n) · specialize in"],
+["U1 C2","excessive","adj","aşırı","مفرط","much more than necessary","___ exercise can sometimes cause health problems.","Excessive","≠ moderate · exceed (v), excessively (adv)"],
+["U1 C2","repetitive","adj","tekrarlayan, monoton","متكرر، رتيب","doing the same thing many times","Her speech became ___ as she kept repeating the same points.","repetitive","repeat (v), repetition (n)"],
+["U2 C1","recall","v","hatırlamak","يتذكّر","remember a fact or event","She ___ seeing him outside the shop on the night of the robbery.","recalled","= remember"],
+["U2 C1","faulty","adj","hatalı, kusurlu","معيب، خاطئ","not working or made correctly","The company recalled 500,000 cars because of a ___ connection.","faulty","fault (n) · ≠ flawless"],
+["U2 C1","disorder","n","bozukluk; karışıklık","اضطراب","illness of mind/body; confusion","Insomnia is one of the most common sleep ___.","disorders","mental/genetic disorder"],
+["U2 C1","retain","v","akılda tutmak, korumak","يحتفظ","keep or continue to have","I have a good memory and can ___ facts easily.","retain","= keep"],
+["U2 C1","alter","v","değiştirmek","يغيّر","change","Giving up our car has radically ___ our lifestyle.","altered","alteration (n)"],
+["U2 C1","circumstance","n","koşul, durum","ظرف","conditions that affect a situation","Under normal ___, a child's language will develop naturally.","circumstances","in/under … circumstances"],
+["U2 C1","fade","v","solmak, yavaşça kaybolmak","يتلاشى","disappear gradually","My memory of childhood ___ away as time goes by.","fades","fade away"],
+["U2 C1","store","v","depolamak, saklamak","يخزّن","keep for future use","Scientists research how the brain ___ information.","stores","storage (n)"],
+["U2 C1","subjective","adj","öznel","ذاتي","based on your own opinions","We examine objective facts, not the witness's ___ opinions.","subjective","≠ objective · subjectivity (n)"],
+["U2 C1","raise","v","gündeme getirmek","يطرح (قضية)","begin to talk about a subject","Local residents have ___ concerns about late-night noise.","raised","= bring up · raise an issue/question"],
+["U2 C1","phenomenon","n","olgu, fenomen","ظاهرة","a fact or event not fully understood","Language is a social and cultural ___.","phenomenon","natural/social phenomenon"],
+["U2 C1","navigate","v","yolunu bulmak","يجد طريقه","find which way to go","We managed to ___ our way through the forest.","navigate","navigation (n)"],
+["U2 C1","prioritize","v","önceliklendirmek","يعطي الأولوية","treat as most important","To meet the deadline, we need to ___ the most critical tasks.","prioritize","priority (n) · top priority"],
+["U2 C1","superior","adj","üstün","متفوّق","better in quality","Her ___ intellect makes her the ideal candidate.","superior","≠ inferior"],
+["U2 C1","concern","n","endişe","قلق","a feeling of worry","There is growing ___ about the inflation rate in my country.","concern","concerned (adj), concerning (prep)"],
+["U2 C1","envy","v","imrenmek, kıskanmak","يحسد، يغبط","want what someone else has","She has a lifestyle which most people would ___.","envy","envious (adj)"],
+["U2 C1","attention","n","dikkat","انتباه","carefully listening to or watching","You should pay ___ to what she says.","attention","attentive (adj) · pay/draw/attract attention"],
+["U2 C2","uneasy","adj","huzursuz, tedirgin","قلق، غير مرتاح","worried that sth bad may happen","She felt ___ about leaving the children with the new nanny.","uneasy","≠ calm · feel uneasy about"],
+["U2 C2","uncertain","adj","emin olmayan, belirsiz","غير متأكد","not sure","I feel deeply ___ about the future.","uncertain","certain (adj)"],
+["U2 C2","alert","adj","uyanık, tetikte","يقظ","quick to notice and act","Doing puzzles regularly keeps your mind ___ and active.","alert",""],
+["U2 C2","nervous","adj","gergin, endişeli","متوتر","worried and unable to relax","She was so ___ about her exams that she couldn't sleep.","nervous","nervousness (n) · ≠ relaxed"],
+["U2 C2","treatment","n","tedavi","علاج","use of drugs, therapy etc. to cure","Chemotherapy is often used in the ___ of cancer.","treatment","treat (v) · receive treatment"],
+["U2 C2","distressing","adj","üzücü, acı veren","مؤلم، مُزعج","making you very upset","It was deeply ___ for him to see his wife in such pain.","distressing","distress (n)"],
+["U2 C2","seek","v","aramak, başvurmak (yardım)","يطلب، يسعى","ask for advice or help","Fred ___ professional help for his anxiety disorder.","sought","seek-sought-sought · seek help/advice"],
+["U2 C2","adverse","adj","olumsuz, zararlı","سلبي، ضار","having a harmful effect","Violent films have an ___ effect on children.","adverse","≠ favourable · adverse effect/conditions"],
+["U2 C2","widespread","adj","yaygın","منتشر","existing in many places / among many","Poverty in the region is ___, affecting millions of people.","widespread","= common, extensive"],
+["U2 C2","increasingly","adv","giderek","بشكل متزايد","more and more","Doctors are growing ___ concerned about his condition.","increasingly","increase (n/v), increasing (adj)"],
+["U2 C2","reaction","n","tepki","ردّ فعل","what you feel or do as a result of sth","The movie got a mixed ___ from critics.","reaction","react (v)"],
+["U2 C2","persist","v","sürmek, devam etmek","يستمر","continue to exist or happen","If the pain ___, you must see a doctor.","persists","persistent (adj)"],
+["U2 C2","confront","v","yüzleşmek","يواجه","face a difficult situation or person","One day, you will have to ___ the hard reality.","confront","≠ avoid"],
+["U2 C2","extent","n","ölçü, derece","مدى","how large or serious sth is","What you say is true to some ___.","extent","to some extent / to what extent"],
+["U2 C2","counsel","v","danışmanlık vermek","يقدّم الاستشارة","give support or professional advice","We ___ students on their academic and personal problems.","counsel","counsellor (n)"],
+["U2 C2","recover","v","iyileşmek","يتعافى","get better after illness/shock","She spent many weeks in hospital ___ from her injuries.","recovering","recovery (n) · recover from"],
+["U2 C2","medication","n","ilaç","دواء","medicine given to ill people","Only a doctor can prescribe ___ for you.","medication","be on medication"],
+["U2 C2","cut down","phr","azaltmak","يقلّل","do or use less of sth","You should ___ on screen time before bed.","cut down","cut down on sth"],
+["U2 C2","refer","phr","sevk etmek, yönlendirmek","يُحيل","send sb to sb for help","Our family doctor ___ me to a specialist.","referred","refer sb to sb"],
+["U2 C2","diagnosis","n","teşhis","تشخيص","identifying the cause of an illness","Early ___ gives patients the best chance of recovery.","diagnosis","diagnose (v)"],
+["U2 C2","care","n","bakım","رعاية","looking after sb ill, old or young","The charity provides ___ and shelter for homeless people.","care","carer (n), caring (adj)"],
+["U2 C2","overwhelming","adj","karşı konulmaz, çok güçlü","غامر، ساحق","very great or strong","I had an ___ urge to eat chocolate cake.","overwhelming","overwhelmed (adj)"],
+["U2 C2","meditation","n","meditasyon","تأمّل","emptying your mind to relax","Yoga involves breathing exercises, stretching, and ___.","meditation","meditate (v)"],
+["U2 C2","tense","adj","gergin","متوتر، مشدود","worried and unable to relax","She was very ___ as she waited for the interview.","tense","≠ relaxed"]
+].map(a=>({ch:a[0],w:a[1],pos:a[2],tr:a[3],ar:a[4],en:a[5],ex:a[6],ans:a[7],frm:a[8]}));
+
+
+/* ---------- WORD FORMS: stem, need, clue, [[option,class]...] first = correct ---------- */
+const F1=[
+["My ___ to cycling keeps me fit and healthy.","n","my + ___",[["devotion","n"],["devoted","adj"],["devote","v"],["devotedly","adv"]]],
+["He is a ___ player and always changes teams for more money.","adj","a + ___ + player",[["disloyal","adj"],["loyalty","n"],["disloyalty","n"],["loyally","adv"]]],
+["___ is an essential part of teamwork.","n","___ + is",[["Unity","n"],["Unite","v"],["United","ved"],["Uniting","ving"]]],
+["We have an ___ movie night with friends.","adj","an + ___ + movie night",[["occasional","adj"],["occasion","n"],["occasionally","adv"],["occasions","npl"]]],
+["The athlete was given a four-year ___ for doping.","n","a four-year + ___",[["suspension","n"],["suspend","v"],["suspended","ved"],["suspending","ving"]]],
+["She ___ his question and answered before he asked.","vpast","She + ___ + his question",[["anticipated","vpast"],["anticipation","n"],["anticipating","ving"],["anticipatory","adj"]]],
+["The police ___ him of stealing the money.","vpast","The police + ___ + him",[["accused","vpast"],["accusation","n"],["accusing","ving"],["accusations","npl"]]],
+["Smoking is ___ to people's health.","adj","is + ___ + to",[["hazardous","adj"],["hazard","n"],["hazards","npl"],["hazardously","adv"]]],
+["My doctor referred me to a ___ for my knee.","nper","refer sb to a + ___",[["specialist","nper"],["specialize","v"],["special","adj"],["specialized","ved"]]],
+["The prices at the restaurant were ___ high.","adv","___ + high",[["excessively","adv"],["excessive","adj"],["exceed","v"],["excess","n"]]],
+["Try to avoid ___ in your writing.","n","avoid + ___",[["repetition","n"],["repetitive","adj"],["repeat","v"],["repeatedly","adv"]]],
+["Colleagues were ___ of her success.","adj","were + ___ + of",[["envious","adj"],["envy","v"],["enviously","adv"],["envies","v"]]],
+["The waiters were ___ and friendly.","adj","were + ___ + and friendly",[["attentive","adj"],["attention","n"],["attentively","adv"],["attend","v"]]],
+["___ salespeople in stores annoy me.","adj","___ + salespeople",[["Persistent","adj"],["Persist","v"],["Persistence","n"],["Persistently","adv"]]],
+["Doctors expect him to make a full ___.","n","a full + ___",[["recovery","n"],["recover","v"],["recovered","vpast"],["recovering","ving"]]],
+["Harriet was ___ by a feeling of homesickness.","ed","was + ___ + by",[["overwhelmed","ed"],["overwhelming","ing"],["overwhelm","v"],["overwhelmingly","adv"]]],
+["She was in ___ pain after the surgery.","adj","in + ___ + pain",[["considerable","adj"],["considerably","adv"],["consider","v"],["consideration","n"]]],
+["Healthy ___ can enhance athletes' performance.","n","Healthy + ___",[["competition","n"],["compete","v"],["competitive","adj"],["competitively","adv"]]],
+["There was a significant ___ in her grades.","n","a significant + ___",[["enhancement","n"],["enhance","v"],["enhanced","vpast"],["enhancing","ving"]]],
+["Many of the horses were showing signs of ___.","n","signs of + ___",[["distress","n"],["distressing","ing"],["distressed","ed"],["distressingly","adv"]]],
+["The doctor was able to ___ the patient's condition.","v","able to + ___",[["diagnose","v"],["diagnosis","n"],["diagnostic","adj"],["diagnosed","vpast"]]],
+["People who ___ in the morning stay calmer all day.","v","People who + ___",[["meditate","v"],["meditation","n"],["meditative","adj"],["meditating","ving"]]],
+["Helping others makes our lives more ___.","adj","more + ___ (+)",[["meaningful","adj"],["meaningless","opp"],["meaning","n"],["meaningfully","adv"]]],
+["The Oscars are awarded ___.","adv","are awarded + ___",[["annually","adv"],["annual","adj"],["annuals","npl"],["annualize","v"]]],
+["There's always an element of ___ in decision-making.","n","an element of + ___",[["subjectivity","n"],["subjective","adj"],["subjectively","adv"],["subject","diff"]]]
+];
+
+/* ---------- MEANING & COLLOCATION: stem, correct, [wrong], key rule ---------- */
+const L1=[
+["The opposite of \"subjective\" is:","objective",["superior","adverse","genuine"],"subjective ≠ objective"],
+["The opposite of \"superior\" is:","inferior",["excessive","alert","faulty"],"superior ≠ inferior"],
+["The opposite of \"adverse\" is:","favourable",["widespread","tense","uneasy"],"adverse ≠ favourable"],
+["The opposite of \"excessive\" is:","moderate",["repetitive","fierce","relatively"],"excessive ≠ moderate"],
+["The opposite of \"cheer on\" is:","boo",["chant","admit","unite"],"cheer on ≠ boo"],
+["\"raise an issue\" means:","bring up an issue",["solve an issue","avoid an issue","issue a passport"],"raise (an issue) = bring up"],
+["A synonym of \"detect\" is:","notice",["determine","navigate","retain"],"detect = notice"],
+["A synonym of \"persist\" is:","continue",["confront","counsel","fade"],"persist = continue"],
+["A synonym of \"widespread\" is:","common",["genuine","annual","alert"],"widespread = common"],
+["A synonym of \"alter\" is:","change",["recall","retain","store"],"alter = change"],
+["What you say is true to some ___.","extent",["occasion","peak","concern"],"to some extent"],
+["Fred decided to ___ professional help.","seek",["raise","issue","store"],"seek help / advice"],
+["The match was cancelled because of ___ weather conditions.","adverse",["excessive","genuine","faulty"],"adverse weather / conditions"],
+["Growing pollution is a serious health ___.","hazard",["incident","venue","disorder"],"a health hazard"],
+["There is ___ rivalry between the two clubs.","fierce",["genuine","annual","faulty"],"fierce rivalry"],
+["He has been ___ medication for two months.","on",["in","at","with"],"be on medication"],
+["You should cut down ___ sugar.","on",["in","from","off"],"cut down on sth"],
+["She spent weeks recovering ___ her injuries.","from",["of","on","with"],"recover from"],
+["Greg insisted ___ his innocence.","on",["in","to","for"],"insist on sth"],
+["I hope to specialize ___ pediatrics.","in",["on","at","for"],"specialize in"],
+["The university is associated ___ academic excellence.","with",["to","for","by"],"associate with"],
+["The player's loyalty ___ his club is famous.","to",["for","at","with"],"loyalty to"],
+["You should pay ___ to what she says.","attention",["concern","care","expression"],"pay attention to"]
+];
+
+/* ---------- GRAMMAR: stem, [[option, reason]...] first = correct ---------- */
+const G1=[
+["The man ___ car was stolen called the police.",[["whose","POSS_OK"],["who","NEED_POSS"],["which","NEED_POSS"],["that","NEED_POSS"]]],
+["Istanbul, ___ I was born, is a huge city.",[["where","PLACE_OK"],["which","COMPLETE"],["that","THAT_COMMA"],["when","WHEN_ONLY"]]],
+["Istanbul, ___ I visited last year, was amazing.",[["which","OBJ_OK"],["where","WHERE_OBJ"],["that","THAT_COMMA"],["when","WHEN_ONLY"]]],
+["I'll never forget the day ___ we won the cup.",[["when","TIME_OK"],["which","COMPLETE"],["where","WHERE_ONLY"],["whose","NO_POSS"]]],
+["That's the reason ___ I left early.",[["why","REASON_OK"],["which","COMPLETE"],["where","WHERE_ONLY"],["what","WHAT_NOT"]]],
+["My brother, ___ lives in Ankara, is a doctor.",[["who","PERS_SUBJ"],["that","THAT_COMMA"],["which","WHICH_PERS"],["whose","NO_POSS"]]],
+["He failed the exam, ___ surprised everyone.",[["which","SIT_OK"],["that","THAT_SIT"],["what","WHAT_NOT"],["who","WHO_ONLY"]]],
+["Which sentence is WRONG?",[["My father, that is a teacher, loves football.","WRONG_THAT"],["My father, who is a teacher, loves football.","SENT_OK"],["The man that teaches us is kind.","SENT_OK"],["The book which I read was long.","SENT_OK"]]],
+["In which sentence can the relative pronoun be left out?",[["The book that I bought yesterday is great.","OMIT_OBJ"],["The woman who called you is here.","OMIT_SUBJ"],["My car, which is old, broke down.","OMIT_ND"],["The team that won got a trophy.","OMIT_SUBJ"]]],
+["The film ___ we watched last night was boring. Which word is NOT possible?",[["who","WHO_THING"],["which","POSSIBLE"],["that","POSSIBLE"],["— (nothing)","POSSIBLE"]]],
+["Our coach, ___ we all respect, has retired.",[["whom","PERS_OBJ"],["that","THAT_COMMA"],["which","WHICH_PERS"],["— (nothing)","OMIT_ND"]]],
+["The stadium ___ hosts the final holds 75,000 spectators.",[["which","SUBJ_OK"],["where","WHERE_SUBJ"],["whose","NO_POSS"],["when","WHEN_ONLY"]]],
+["The stadium ___ the final will be played holds 75,000 spectators.",[["where","PLACE_OK"],["which","COMPLETE"],["whose","NO_POSS"],["that","COMPLETE"]]],
+["It started raining heavily, ___ meant the match was suspended.",[["which","SIT_OK"],["that","THAT_SIT"],["what","WHAT_NOT"],["when","WHEN_ONLY"]]],
+["Choose the correctly punctuated sentence.",[["Mount Everest, which is the highest mountain, attracts climbers.","ND_UNIQUE"],["Mount Everest which is the highest mountain attracts climbers.","NEED_COMMAS"],["Mount Everest, that is the highest mountain, attracts climbers.","THAT_COMMA"],["Mount Everest which is the highest mountain, attracts climbers.","ONE_COMMA"]]],
+["\"My sister, who lives in London, is a nurse.\" This means:",[["I have only one sister.","ND_MEAN"],["I have more than one sister.","DEF_MEAN"],["My sister doesn't live in London.","CONTRA"],["The sentence is wrong.","SENT_IS_OK"]]],
+["I don't like people ___ talk during films.",[["who","PERS_SUBJ"],["which","WHICH_PERS"],["whose","NO_POSS"],["they","NOT_REL"]]],
+["The house in ___ I grew up has been sold.",[["which","PREP_WHICH"],["that","PREP_THAT"],["where","PREP_WHERE"],["who","WHO_ONLY"]]],
+["A psychologist is someone ___ job is to help people.",[["whose","POSS_OK"],["who","NEED_POSS"],["who's","WHOS"],["which","NEED_POSS"]]],
+["Everything ___ he said was true.",[["that","EVERY_THAT"],["what","WHAT_NOT"],["who","WHO_ONLY"],["whose","NO_POSS"]]],
+["Choose the correct sentence.",[["The hotel where we stayed was lovely.","WHERE_OK"],["The hotel where we stayed in was lovely.","PREP_WHERE"],["The hotel which we stayed was lovely.","STAY_IN"],["The hotel in that we stayed was lovely.","PREP_THAT"]]],
+["My phone, ___ battery is dead, needs charging.",[["whose","POSS_OK"],["which","NEED_POSS"],["that","NEED_POSS"],["its","NOT_REL"]]],
+["She smiled at me, ___ made me feel much better.",[["which","SIT_OK"],["that","THAT_SIT"],["what","WHAT_NOT"],["it","NOT_REL"]]],
+["The woman ___ I met at the party is a doctor. Which is correct?",[["who, that or nothing – all correct","OMIT_ALL"],["only who","ALSO_OTHERS"],["only that","ALSO_OTHERS"],["only nothing (no pronoun)","ALSO_OTHERS"]]],
+["The player ___ the referee sent off was crying.",[["who","PERS_OBJ"],["whose","NO_POSS"],["which","WHICH_PERS"],["where","WHERE_ONLY"]]],
+["Choose the correct sentence.",[["The man who lives next door is a nurse.","PERS_SUBJ"],["The man lives next door is a nurse.","OMIT_SUBJ"],["The man who he lives next door is a nurse.","DOUBLE"],["The man which lives next door is a nurse.","WHICH_PERS"]]],
+["2014 was the year ___ I started university.",[["when","TIME_OK"],["where","WHERE_ONLY"],["which","COMPLETE"],["whose","NO_POSS"]]],
+["Fans ___ team loses every week still come to the stadium.",[["whose","POSS_OK"],["who","NEED_POSS"],["which","NEED_POSS"],["that's","THATS"]]],
+["The incident, ___ happened after the match, was shown on TV.",[["which","ND_THING"],["that","THAT_COMMA"],["who","WHO_ONLY"],["when","WHEN_ONLY"]]],
+["There are many places in Istanbul ___ you can relax.",[["where","PLACE_OK"],["which","COMPLETE"],["when","WHEN_ONLY"],["whose","NO_POSS"]]]
+];
+
+/* reason texts: [tr, en, ar] */
+const R={
+POSS_OK:["'whose' = onun/onların. İsmi sahibine bağlar (adamın arabası, telefonun bataryası).","'whose' = his/her/its/their. It links a noun to its owner (the man's car, the phone's battery).","'whose' = ـه/ـها/ـهم، تربط الاسم بمالكه (سيارة الرجل، بطارية الهاتف)."],
+NEED_POSS:["Burada sahiplik var (… car / … job / … battery). Sahipliği sadece 'whose' gösterir.","There is possession here (… car / … job / … battery). Only 'whose' can show possession.","هنا توجد ملكية (… car / … job / … battery)، وفقط 'whose' تدل على الملكية."],
+NO_POSS:["'whose' sahiplik bildirir ve hemen ardından isim gelir; burada sahiplik yok.","'whose' shows possession and is followed by a noun; there is no possession here.","'whose' تدل على الملكية ويليها اسم؛ لا توجد ملكية هنا."],
+PLACE_OK:["Boşluktan sonraki cümle tam (eksik özne/nesne yok). Yer için 'where' (= in which) kullanılır.","The clause after the blank is complete (no missing subject/object). For a place, use 'where' (= in which).","الجملة بعد الفراغ مكتملة (لا ينقصها فاعل أو مفعول). للمكان نستخدم 'where' (= in which)."],
+COMPLETE:["Boşluktan sonraki cümle zaten tam; 'which/that' bir özne ya da nesnenin yerini tutmalı ama eksik öge yok. Yer/zaman/sebep için where/when/why gerekir.","The clause after the blank is already complete. 'which/that' must replace a subject or object, but nothing is missing. Use where/when/why for place/time/reason.","الجملة بعد الفراغ مكتملة. 'which/that' يجب أن تحل محل فاعل أو مفعول، لكن لا شيء ناقص. استخدم where/when/why للمكان/الزمان/السبب."],
+THAT_COMMA:["Virgülden sonra (non-defining cümle) 'that' asla kullanılmaz.","'that' is never used after a comma (in a non-defining clause).","لا تُستخدم 'that' أبدًا بعد الفاصلة (في الجملة غير التعريفية)."],
+WHEN_ONLY:["'when' sadece zaman için kullanılır (gün, yıl, an).","'when' is used only for time (day, year, moment).","'when' تُستخدم للزمن فقط (يوم، سنة، لحظة)."],
+WHERE_ONLY:["'where' sadece yer için kullanılır.","'where' is used only for places.","'where' تُستخدم للمكان فقط."],
+OBJ_OK:["'visit' nesne ister (I visited Istanbul). 'which' bu nesnenin yerini alır; virgül olduğu için 'that' olmaz.","'visit' needs an object (I visited Istanbul). 'which' replaces that object; because of the comma, 'that' is not possible.","الفعل 'visit' يحتاج مفعولًا (I visited Istanbul)، و'which' تحل محله؛ وبسبب الفاصلة لا يمكن 'that'."],
+WHERE_OBJ:["'where' = in which. Ama 'visit' doğrudan nesne ister; 'visit in Istanbul' denmez.","'where' = in which. But 'visit' takes a direct object; we don't say 'visit in Istanbul'.","'where' = in which، لكن 'visit' يأخذ مفعولًا مباشرًا؛ لا نقول 'visit in Istanbul'."],
+TIME_OK:["'the day/the year' bir zaman ve sonraki cümle tam → 'when'.","'the day/the year' is a time and the clause is complete → 'when'.","'the day/the year' زمن والجملة مكتملة → 'when'."],
+REASON_OK:["'the reason'dan sonra 'why' kullanılır.","After 'the reason' we use 'why'.","بعد 'the reason' نستخدم 'why'."],
+WHAT_NOT:["'what' relative pronoun değildir; 'şey ki / ne' anlamındadır, bir isimden veya virgülden sonra gelmez.","'what' is not a relative pronoun. It means 'the thing that' and cannot follow a noun or a comma.","'what' ليست ضميرًا موصولًا؛ معناها 'الشيء الذي' ولا تأتي بعد اسم أو فاصلة."],
+PERS_SUBJ:["Kişi + boşluktan sonraki fiilin öznesi yok → 'who'.","A person, and the verb after the blank has no subject → 'who'.","شخص، والفعل بعد الفراغ بلا فاعل → 'who'."],
+WHICH_PERS:["'which' şeyler ve hayvanlar içindir, insanlar için kullanılmaz.","'which' is for things and animals, not for people.","'which' للأشياء والحيوانات، لا للأشخاص."],
+WHO_ONLY:["'who' sadece insanlar için; burada bir şeyden ya da durumdan bahsediliyor.","'who' is only for people; here we are talking about a thing or a situation.","'who' للأشخاص فقط؛ هنا نتحدث عن شيء أو موقف."],
+SIT_OK:["Virgül + 'which', önceki cümlenin tamamını (bütün durumu) işaret eder.","Comma + 'which' can refer to the whole previous sentence (the whole situation).","فاصلة + 'which' تشير إلى الجملة السابقة كلها (الموقف بأكمله)."],
+THAT_SIT:["'that' bütün bir cümleyi işaret edemez ve virgülden sonra gelemez.","'that' cannot refer to a whole sentence and cannot come after a comma.","'that' لا تشير إلى جملة كاملة ولا تأتي بعد فاصلة."],
+WRONG_THAT:["Hatalı olan bu: virgülden sonra 'that' kullanılmış. Doğrusu: My father, who is a teacher, …","This is the wrong one: 'that' is used after a comma. Correct: My father, who is a teacher, …","هذه هي الخاطئة: استُخدمت 'that' بعد فاصلة. الصحيح: My father, who is a teacher, …"],
+SENT_OK:["Bu cümle doğru, bu yüzden cevap değil.","This sentence is correct, so it is not the answer.","هذه الجملة صحيحة، لذا ليست الإجابة."],
+OMIT_OBJ:["'that'ten sonra özne (I) geliyor → that nesnedir → atılabilir: The book I bought…","'that' is followed by a subject (I) → it is the object → it can be left out: The book I bought…","بعد 'that' يأتي فاعل (I) → فهي مفعول → يمكن حذفها: The book I bought…"],
+OMIT_SUBJ:["Pronoun cümlenin öznesi (who called / that won / who lives); özne olan pronoun atılamaz.","The pronoun is the subject of the clause (who called / that won / who lives), so it cannot be left out.","الضمير هو فاعل الجملة (who called / that won / who lives)، فلا يمكن حذفه."],
+OMIT_ND:["Virgüllü (non-defining) cümlede pronoun asla atılamaz.","In a non-defining (comma) clause the pronoun can never be left out.","في الجملة غير التعريفية (بين فاصلتين) لا يُحذف الضمير أبدًا."],
+POSSIBLE:["Bu burada kullanılabilir (defining + nesne), yani soru 'kullanılamayan'ı sorduğu için cevap değil.","This IS possible here (defining clause, object), so it is not the answer – the question asks what is NOT possible.","هذا ممكن هنا (جملة تعريفية، مفعول)، والسؤال عمّا لا يمكن، لذا ليس الإجابة."],
+WHO_THING:["Doğru: 'the film' bir şey, bu yüzden 'who' kullanılamaz.","Correct: 'the film' is a thing, so 'who' is NOT possible.","صحيح: 'the film' شيء، لذا لا يمكن استخدام 'who'."],
+PERS_OBJ:["Nesne konumundaki kişi (we respect him / sent him off) → who/whom. Virgül varsa 'that' ve boş bırakma olmaz.","A person in object position (we respect him / sent him off) → who/whom. With commas, no 'that' and no omission.","شخص في موقع المفعول (we respect him / sent him off) → who/whom. مع الفواصل لا 'that' ولا حذف."],
+SUBJ_OK:["'hosts' fiilinin öznesi yok. 'which' özne olur (the stadium hosts the final).","The verb 'hosts' has no subject. 'which' becomes the subject (the stadium hosts the final).","الفعل 'hosts' بلا فاعل، و'which' تصبح الفاعل (the stadium hosts the final)."],
+WHERE_SUBJ:["'where' bir fiilin öznesi olamaz. 'hosts' özne ister → which.","'where' cannot be the subject of a verb. 'hosts' needs a subject → which.","'where' لا يمكن أن تكون فاعلًا. الفعل 'hosts' يحتاج فاعلًا → which."],
+ND_UNIQUE:["Tek bir Everest var → ekstra bilgi → iki virgül + which.","There is only one Everest → extra information → two commas + which.","يوجد إيفرست واحد فقط → معلومة إضافية → فاصلتان + which."],
+NEED_COMMAS:["Everest tektir; cümle ekstra bilgi verir ve virgül ister.","Everest is unique, so the clause is extra information and needs commas.","إيفرست فريد، فالجملة معلومة إضافية وتحتاج فواصل."],
+ONE_COMMA:["Non-defining cümle iki virgül ister: önünde ve arkasında.","A non-defining clause needs two commas: one before it and one after it.","الجملة غير التعريفية تحتاج فاصلتين: قبلها وبعدها."],
+ND_MEAN:["Virgül = ekstra bilgi → tek kız kardeşim var, Londra'da yaşadığı ek bilgi.","Commas = extra information → I have only one sister; 'lives in London' is just extra.","الفواصل = معلومة إضافية → لدي أخت واحدة فقط، و'تعيش في لندن' معلومة زائدة."],
+DEF_MEAN:["Bu, virgülSÜZ cümlenin anlamı olurdu (hangi kız kardeş? Londra'daki).","That would be the meaning WITHOUT commas (which sister? the one in London).","هذا معنى الجملة بدون فواصل (أي أخت؟ التي في لندن)."],
+CONTRA:["Cümle açıkça Londra'da yaşadığını söylüyor.","The sentence clearly says she lives in London.","الجملة تقول بوضوح إنها تعيش في لندن."],
+SENT_IS_OK:["Cümle doğru: virgüller + kişi için who.","The sentence is correct: commas + who for a person.","الجملة صحيحة: فواصل + who للشخص."],
+NOT_REL:["Bu kelime relative (bağlayıcı) kelime değil; iki cümleyi bağlayamaz.","This word is not a relative word, so it cannot join the two clauses.","هذه الكلمة ليست أداة وصل، فلا يمكنها ربط الجملتين."],
+PREP_WHICH:["Edattan (in) sonra şeyler için 'which' kullanılır: in which.","After a preposition (in) we use 'which' for things: in which.","بعد حرف الجر (in) نستخدم 'which' للأشياء: in which."],
+PREP_THAT:["'that' edattan sonra asla gelmez (in that ✗).","'that' can never come after a preposition (in that ✗).","'that' لا تأتي أبدًا بعد حرف جر (in that ✗)."],
+PREP_WHERE:["'where' zaten 'in which' demek; 'in' eklemek tekrar olur.","'where' already means 'in which', so adding 'in' repeats it.","'where' تعني أصلًا 'in which'، فإضافة 'in' تكرار."],
+WHOS:["'who's' = who is. Sahiplik göstermez.","'who's' = who is. It does not show possession.","'who's' = who is، ولا تدل على الملكية."],
+EVERY_THAT:["everything / all / nothing / something'ten sonra 'that' kullanılır.","After everything / all / nothing / something we use 'that'.","بعد everything / all / nothing / something نستخدم 'that'."],
+WHERE_OK:["'where' = in which, bu yüzden ayrıca 'in' gerekmez.","'where' = in which, so no extra 'in' is needed.","'where' = in which، فلا حاجة لـ 'in' إضافية."],
+STAY_IN:["Otelde kalmak 'stay in' ile kurulur. 'which' ile edat gerekir: which we stayed in.","We 'stay in' a hotel. With 'which' the preposition is needed: which we stayed in.","نقول 'stay in' a hotel، ومع 'which' نحتاج حرف الجر: which we stayed in."],
+OMIT_ALL:["Defining + nesne (I met her) → who, that veya hiçbiri: hepsi doğru.","Defining clause + object (I met her) → who, that or nothing: all are correct.","جملة تعريفية + مفعول (I met her) → who أو that أو الحذف: كلها صحيحة."],
+ALSO_OTHERS:["Bu doğru ama tek doğru değil; diğer seçenekler de doğru.","This is correct, but not the only correct option – the others are correct too.","هذا صحيح لكنه ليس الوحيد؛ الخيارات الأخرى صحيحة أيضًا."],
+DOUBLE:["İkinci bir özne (he) eklenmez; 'who' zaten onun yerini tutuyor.","You cannot add a second subject (he); 'who' already replaces it.","لا يُضاف فاعل ثانٍ (he)؛ 'who' تحل محله أصلًا."],
+THATS:["'that's' = that is; sahiplik göstermez.","'that's' = that is; it does not show possession.","'that's' = that is، ولا تدل على الملكية."],
+ND_THING:["Virgül + şey (the incident) + fiilin öznesi yok → 'which'.","Comma + a thing (the incident) + the verb has no subject → 'which'.","فاصلة + شيء (the incident) + الفعل بلا فاعل → 'which'."]
+};
+
+/* word classes: [tr, en, ar] */
+const PC={n:["isim","a noun","اسم"],npl:["çoğul isim","a plural noun","اسم جمع"],nper:["kişi bildiren isim","a noun for a person","اسم يدل على شخص"],v:["fiil (yalın)","a verb (base form)","فعل (المصدر)"],vpast:["geçmiş zaman fiil","a past-tense verb","فعل ماضٍ"],ving:["-ing formu","an -ing form","صيغة -ing"],ved:["-ed formu","an -ed form","صيغة -ed"],adj:["sıfat","an adjective","صفة"],adv:["zarf","an adverb","ظرف (حال)"],ing:["-ing sıfat (duyguyu yaratan şey)","an -ing adjective (the thing that causes the feeling)","صفة -ing (ما يسبّب الشعور)"],ed:["-ed sıfat (kişinin hissettiği)","an -ed adjective (how a person feels)","صفة -ed (ما يشعر به الشخص)"],opp:["sıfat ama zıt anlamlı","an adjective, but with the opposite meaning","صفة لكن بمعنى معاكس"],diff:["anlamı farklı başka bir kelime","a different word with another meaning","كلمة أخرى بمعنى مختلف"],phr:["öbek fiil","a phrasal verb","فعل مركّب"]};
+
+const E=s=>`<span class="en" dir="ltr">${s}</span>`;
+const GRAM1={
+tr:`<h3>Hangi kelime ne için?</h3><table><tr><th>Kelime</th><th>Kullanım</th><th>Örnek</th></tr>
+<tr><td>${E('<b>who</b>')}</td><td>insan</td><td>${E('the fan <b>who</b> cried')}</td></tr><tr><td>${E('<b>which</b>')}</td><td>şey, hayvan, durum</td><td>${E('the match <b>which</b> we lost')}</td></tr><tr><td>${E('<b>that</b>')}</td><td>insan + şey (sadece virgülsüz)</td><td>${E('the team <b>that</b> won')}</td></tr><tr><td>${E('<b>whose</b>')}</td><td>sahiplik (-ın/-in)</td><td>${E('the man <b>whose</b> car…')}</td></tr><tr><td>${E('<b>where</b>')}</td><td>yer (= in which)</td><td>${E('the city <b>where</b> I live')}</td></tr><tr><td>${E('<b>when</b>')}</td><td>zaman</td><td>${E('the day <b>when</b> we won')}</td></tr><tr><td>${E('<b>why</b>')}</td><td>sebep</td><td>${E('the reason <b>why</b>…')}</td></tr></table>
+<h3>1. Defining (virgülsüz)</h3><p>Kimden/neden bahsettiğimizi belirler; çıkarırsan anlam bozulur. Virgül yok, <b>that</b> kullanılabilir.</p>${X('y','The player who/that scored the goal is only 19.')}
+<h3>2. Non-defining (virgüllü)</h3><p>Ekstra bilgi verir. <b>İki virgül zorunlu</b>, <b>that kullanılmaz</b>, pronoun <b>atılamaz</b>.</p>${X('y','My father, who is a teacher, loves football.')}${X('n','My father, that is a teacher, loves football.')}<p>Anlam farkı: virgülsüz <i>my sister who lives in London</i> = birden fazla kız kardeşim var; virgüllü = tek kız kardeşim var.</p>
+<h3>3. Omission (pronoun'u atmak)</h3><p>Sadece <b>defining</b> cümlede ve pronoun <b>nesne</b> ise. Test: pronoun'dan hemen sonra bir özne (I, he, the coach…) geliyorsa atabilirsin.</p>${X('y','The book (that) I bought is great.')}${X('n','The woman called you is here.')}${X('y','The woman who called you is here.')}
+<h3>4. Durumu anlatan which</h3><p>Virgül + <b>which</b> önceki cümlenin tamamını işaret eder. <b>that</b> ve <b>what</b> olmaz.</p>${X('y','He passed the exam, which surprised everyone.')}${X('n','He passed the exam, what surprised everyone.')}
+<h3>5. Sık yapılan hatalar</h3><p><b>where mi which mi?</b> Sonraki cümlede eksik nesne/özne varsa which, cümle tamsa where.</p>${X('y','the city which I visited · the city where I live')}${X('n','The hotel where we stayed in was lovely.')}<p><b>Edattan sonra that olmaz:</b></p>${X('y','the house in which I grew up')}${X('n','the house in that I grew up')}<p><b>everything / all / nothing + that</b>, <b>the reason + why</b>. Çift özne yasak:</p>${X('n','the man who he lives here')}`,
+en:`<h3>Which word for what?</h3><table><tr><th>Word</th><th>Use</th><th>Example</th></tr>
+<tr><td><b>who</b></td><td>people</td><td>the fan <b>who</b> cried</td></tr><tr><td><b>which</b></td><td>things, animals, situations</td><td>the match <b>which</b> we lost</td></tr><tr><td><b>that</b></td><td>people + things (defining only)</td><td>the team <b>that</b> won</td></tr><tr><td><b>whose</b></td><td>possession</td><td>the man <b>whose</b> car…</td></tr><tr><td><b>where</b></td><td>place (= in which)</td><td>the city <b>where</b> I live</td></tr><tr><td><b>when</b></td><td>time</td><td>the day <b>when</b> we won</td></tr><tr><td><b>why</b></td><td>reason</td><td>the reason <b>why</b>…</td></tr></table>
+<h3>1. Defining (no commas)</h3><p>Tells us exactly who or what we mean; without it the meaning is incomplete. No commas, <b>that</b> is possible.</p>${X('y','The player who/that scored the goal is only 19.')}
+<h3>2. Non-defining (commas)</h3><p>Adds extra information. <b>Two commas</b>, <b>no that</b>, the pronoun <b>cannot be left out</b>.</p>${X('y','My father, who is a teacher, loves football.')}${X('n','My father, that is a teacher, loves football.')}<p>Meaning: <i>my sister who lives in London</i> (no commas) = I have more than one sister; with commas = I have only one.</p>
+<h3>3. Omitting the pronoun</h3><p>Only in a <b>defining</b> clause when the pronoun is the <b>object</b>. Test: if a subject (I, he, the coach…) comes right after it, you can drop it.</p>${X('y','The book (that) I bought is great.')}${X('n','The woman called you is here.')}${X('y','The woman who called you is here.')}
+<h3>4. Which referring to a situation</h3><p>Comma + <b>which</b> can refer to the whole previous sentence. Never <b>that</b> or <b>what</b>.</p>${X('y','He passed the exam, which surprised everyone.')}${X('n','He passed the exam, what surprised everyone.')}
+<h3>5. Common traps</h3><p><b>where or which?</b> If the clause is missing an object/subject, use which; if it is complete, use where.</p>${X('y','the city which I visited · the city where I live')}${X('n','The hotel where we stayed in was lovely.')}<p><b>No that after a preposition:</b></p>${X('y','the house in which I grew up')}${X('n','the house in that I grew up')}<p><b>everything / all / nothing + that</b>, <b>the reason + why</b>. No double subject:</p>${X('n','the man who he lives here')}`,
+ar:`<h3>أي كلمة لأي استخدام؟</h3><table><tr><th>الكلمة</th><th>الاستخدام</th><th>مثال</th></tr>
+<tr><td>${E('<b>who</b>')}</td><td>الأشخاص</td><td>${E('the fan <b>who</b> cried')}</td></tr><tr><td>${E('<b>which</b>')}</td><td>الأشياء، الحيوانات، المواقف</td><td>${E('the match <b>which</b> we lost')}</td></tr><tr><td>${E('<b>that</b>')}</td><td>أشخاص وأشياء (في الجمل التعريفية فقط)</td><td>${E('the team <b>that</b> won')}</td></tr><tr><td>${E('<b>whose</b>')}</td><td>الملكية</td><td>${E('the man <b>whose</b> car…')}</td></tr><tr><td>${E('<b>where</b>')}</td><td>المكان (= in which)</td><td>${E('the city <b>where</b> I live')}</td></tr><tr><td>${E('<b>when</b>')}</td><td>الزمان</td><td>${E('the day <b>when</b> we won')}</td></tr><tr><td>${E('<b>why</b>')}</td><td>السبب</td><td>${E('the reason <b>why</b>…')}</td></tr></table>
+<h3>1. الجملة التعريفية (بدون فواصل)</h3><p>تحدد الشخص أو الشيء المقصود؛ وبدونها يكون المعنى ناقصًا. لا فواصل، ويمكن استخدام ${E('<b>that</b>')}.</p>${X('y','The player who/that scored the goal is only 19.')}
+<h3>2. الجملة غير التعريفية (بين فاصلتين)</h3><p>تضيف معلومة إضافية. <b>فاصلتان إلزاميتان</b>، <b>لا تُستخدم ${E('that')}</b>، ولا يُحذف الضمير.</p>${X('y','My father, who is a teacher, loves football.')}${X('n','My father, that is a teacher, loves football.')}<p>الفرق في المعنى: بدون فواصل = لدي أكثر من أخت؛ مع الفواصل = لدي أخت واحدة فقط.</p>
+<h3>3. حذف الضمير</h3><p>فقط في الجملة <b>التعريفية</b> وعندما يكون الضمير <b>مفعولًا</b>. الاختبار: إذا جاء بعده مباشرة فاعل (I, he, the coach…) يمكن حذفه.</p>${X('y','The book (that) I bought is great.')}${X('n','The woman called you is here.')}${X('y','The woman who called you is here.')}
+<h3>4. ‏which للإشارة إلى موقف كامل</h3><p>فاصلة + ${E('<b>which</b>')} تشير إلى الجملة السابقة كلها، ولا يصح ${E('that')} أو ${E('what')}.</p>${X('y','He passed the exam, which surprised everyone.')}${X('n','He passed the exam, what surprised everyone.')}
+<h3>5. أخطاء شائعة</h3><p><b>where أم which؟</b> إذا نقص الجملةَ مفعولٌ أو فاعل نستخدم which، وإذا كانت مكتملة نستخدم where.</p>${X('y','the city which I visited · the city where I live')}${X('n','The hotel where we stayed in was lovely.')}<p><b>لا تأتي that بعد حرف جر:</b></p>${X('y','the house in which I grew up')}${X('n','the house in that I grew up')}<p>${E('everything / all / nothing + that')} و ${E('the reason + why')}. لا يجوز تكرار الفاعل:</p>${X('n','the man who he lives here')}`
+};
+function X(k,s){return `<span class="ex1 ${k}" dir="ltr">${s}</span>`}
+
+/* ---------- INTERFACE TEXT ---------- */
+const UI={
+tr:{tagline:"Sınav hazırlık portalı",hkick:"B2 modülü · Hazırlık programı",hh1:"Modüldeki her sınav için ayrı bir hazırlık paketi",hlead:"Kelime çalışması, gerçek formatta süreli deneme sınavı ve her şıkkın ayrı ayrı açıklandığı alıştırmalar. Türkçe, İngilizce ve Arapça.",hside:["Nasıl kullanılır","Sınavını seç, önce kelimeleri çalış, sonra alıştırma yap ve süreli deneme sınavıyla kendini ölç. Yanlışların otomatik olarak Hatalarım listesine kaydedilir."],htl:"Modül sınavları",types:{pt:"Progress test",eom:"Modül sonu sınavı",prof:"Yeterlik sınavı"},avail:"Hazır",soon:"Hazırlanıyor",open:"Pakete git",soonBtn:"Yakında",pk1:"Unit 1–2 · Relative clauses",addw:"Ek kelime listesi dahil",feat:[["Kelime çalışması","Kartlar, aranabilir kelime listesi ve sesli telaffuz."],["Alıştırma","Anında geri bildirim ve her şık için ayrı açıklama."],["Deneme sınavı","25 soru, 30 dakika, sınav sonunda cevap anahtarı."],["Hatalarım","Yanlış yaptığın sorular kaydedilir, sadece onları tekrar çöz."]],
+crumb:"Sınavlar",kick:"Progress Test 1 · Hazırlık paketi",h1:"Progress Test 1",lead:"Mentora English B2, Unit 1 (Sport) ve Unit 2 (Psychology), Chapter 1–2. Sınav yüz yüze yapılır.",facts:[["25","soru"],["×4","puan çarpanı"],["30","dakika"],["Yok","telafi sınavı"]],scope:[["Reading","Temaya bağlı, ayrıntılı okuma"],["Vocabulary","Unit 1 Sport · Unit 2 Psychology, Chapter 1–2"],["Grammar","Defining ve non-defining relative clauses, pronoun'un atılması, durumu anlatan which"]],progT:"İlerlemen",words:"kelime",kKnown:"Bilinen kelime",kPrac:"En iyi alıştırma",kExam:"En iyi deneme",
+tabs:{cards:"Kartlar",list:"Kelime listesi",practice:"Alıştırma",exam:"Deneme sınavı",gram:"Gramer",mist:"Hatalarım"},
+all:"Hepsi",learn:"Bilmediklerim",tap:"Anlamı için dokun",forms:"Formlar",prev:"Geri",flip:"Çevir",next:"İleri",shuf:"Karıştır",know:"Biliyorum",unknow:"Bilmiyorum",say:"Dinle",knownMark:"Biliniyor",done:"Bu filtrede çalışılacak kelime kalmadı.",flipLabel:"Kartı çevir",kbd1:"Klavye: <kbd>Boşluk</kbd> çevir · <kbd>←</kbd><kbd>→</kbd> gezin · <kbd>K</kbd> biliyorum",
+search:"Kelime veya anlam ara",found:"kelime",thW:"Kelime",thM:"Anlam",thE:"Örnek",
+modes:{mix:"Karışık",vocab:"Kelime",forms:"Kelime formları",lex:"Kalıplar ve anlam",gram:"Gramer"},q:"Soru",pts:"Başarı",ok:"Doğru",bad:"Yanlış",why:"Şıkların açıklaması",nextq:"Sonraki soru",see:"Sonucu gör",res:"Sonuç",cor:"doğru",again:"Yeni set",yours:"Senin cevabın",right:"Doğru cevap",none:"Boş",tagV:"Kelime",tagF:"Kelime formu",tagL:"Kalıp ve anlam",tagG:"Gramer · relative clauses",full:"Tam cümle",means:"anlamı",nofit:"anlamı bu cümleye uymuyor.",needs:"Burada gereken:",signal:"İpucu",rule:"Kural",notHere:"bu cümlede/kalıpta doğru değil.",kbd2:"Klavye: <kbd>1</kbd>–<kbd>4</kbd> şık seç · <kbd>Enter</kbd> devam",
+msg:[[80,"Sınava hazırsın. Yanlışlarını bir kez daha gözden geçir."],[60,"İyi gidiyor. Yanlış yaptığın konuları tekrar et ve yeni bir set çöz."],[0,"Önce kartlara ve gramer özetine dön, sonra tekrar dene."]],
+exH:"Deneme sınavı",exList:["25 soru: kelime, kelime formu, kalıplar ve gramer","30 dakika süre; süre bitince sınav otomatik teslim edilir","Sınav bitene kadar doğru cevaplar gösterilmez","Sorular arasında gezinebilir, cevabını değiştirebilirsin","Puan: her doğru cevap 4 puan"],start:"Sınavı başlat",left:"Kalan süre",answered:"Cevaplanan",finish:"Sınavı bitir",sure:"boş soru var. Yine de bitirmek istiyor musun?",yes:"Evet, bitir",no:"Sınava dön",timeup:"Süre doldu, sınav teslim edildi.",key:"Cevap anahtarı",outOf:"/ 100",
+mH:"Hatalarım",mEmpty:"Henüz kayıtlı hatan yok. Alıştırmada veya deneme sınavında yanlış yaptığın sorular burada toplanır.",mCount:"soru tekrar bekliyor",mRetry:"Hatalarımı çöz",mClear:"Listeyi temizle",mNote:"Bir soruyu doğru çözdüğünde listeden çıkar.",mMode:"Hatalarım",
+foot:"B2 Prep · Modül sınavlarına hazırlık için bağımsız çalışma portalı. İçerik B2 kelime listesine ve programdaki gramer konularına göre hazırlanır.",foot2:"Öğrenci projesidir; herhangi bir üniversiteyle resmî bağlantısı yoktur. İlerlemen yalnızca bu cihazda saklanır."},
+en:{tagline:"Exam preparation portal",hkick:"B2 module · Preparation programme",hh1:"A preparation pack for every exam in the module",hlead:"Vocabulary study, timed mock exams in the real format, and practice where every option is explained. In Turkish, English and Arabic.",hside:["How to use it","Choose your exam, study the words first, then practise and test yourself with a timed mock exam. Your mistakes are saved automatically to My mistakes."],htl:"Module assessments",types:{pt:"Progress test",eom:"End-of-module exam",prof:"Proficiency exam"},avail:"Available",soon:"In preparation",open:"Open pack",soonBtn:"Coming soon",pk1:"Units 1–2 · Relative clauses",addw:"Includes the additional word list",feat:[["Vocabulary","Flashcards, a searchable word list and audio pronunciation."],["Practice","Instant feedback and an explanation for every option."],["Mock exam","25 questions, 30 minutes, answer key at the end."],["My mistakes","Questions you got wrong are saved so you can retry only those."]],
+crumb:"Exams",kick:"Progress Test 1 · Preparation pack",h1:"Progress Test 1",lead:"Mentora English B2, Unit 1 (Sport) and Unit 2 (Psychology), Chapters 1–2. The test is face-to-face.",facts:[["25","questions"],["×4","score multiplier"],["30","minutes"],["None","make-up exams"]],scope:[["Reading","A theme-related, detailed reading"],["Vocabulary","Unit 1 Sport · Unit 2 Psychology, Chapters 1–2"],["Grammar","Defining and non-defining relative clauses, omitting the pronoun, which referring to a situation"]],progT:"Your progress",words:"words",kKnown:"Words known",kPrac:"Best practice",kExam:"Best mock exam",
+tabs:{cards:"Flashcards",list:"Word list",practice:"Practice",exam:"Mock exam",gram:"Grammar",mist:"My mistakes"},
+all:"All",learn:"Still learning",tap:"Tap to reveal",forms:"Word forms",prev:"Back",flip:"Flip",next:"Next",shuf:"Shuffle",know:"I know it",unknow:"Not yet",say:"Listen",knownMark:"Known",done:"No words left to study in this filter.",flipLabel:"Flip card",kbd1:"Keyboard: <kbd>Space</kbd> flip · <kbd>←</kbd><kbd>→</kbd> move · <kbd>K</kbd> I know it",
+search:"Search a word or meaning",found:"words",thW:"Word",thM:"Meaning",thE:"Example",
+modes:{mix:"Mixed",vocab:"Vocabulary",forms:"Word forms",lex:"Collocations & meaning",gram:"Grammar"},q:"Question",pts:"Accuracy",ok:"Correct",bad:"Incorrect",why:"Why each option is right or wrong",nextq:"Next question",see:"See result",res:"Result",cor:"correct",again:"New set",yours:"Your answer",right:"Correct answer",none:"Blank",tagV:"Vocabulary",tagF:"Word form",tagL:"Collocation & meaning",tagG:"Grammar · relative clauses",full:"Full sentence",means:"means",nofit:"the meaning does not fit this sentence.",needs:"Needed here:",signal:"Signal",rule:"Rule",notHere:"is not correct in this sentence/phrase.",kbd2:"Keyboard: <kbd>1</kbd>–<kbd>4</kbd> choose · <kbd>Enter</kbd> continue",
+msg:[[80,"You are ready for the test. Have one more look at your mistakes."],[60,"Good progress. Revise the topics you missed and try a new set."],[0,"Go back to the flashcards and the grammar summary, then try again."]],
+exH:"Mock exam",exList:["25 questions: vocabulary, word forms, collocations and grammar","30 minutes; the exam is submitted automatically when time runs out","Correct answers are hidden until you finish","You can move between questions and change your answers","Score: 4 points for each correct answer"],start:"Start the exam",left:"Time left",answered:"Answered",finish:"Finish exam",sure:"questions are blank. Finish anyway?",yes:"Yes, finish",no:"Back to the exam",timeup:"Time is up. Your exam has been submitted.",key:"Answer key",outOf:"/ 100",
+mH:"My mistakes",mEmpty:"No saved mistakes yet. Questions you get wrong in practice or in the mock exam will appear here.",mCount:"questions to review",mRetry:"Retry my mistakes",mClear:"Clear the list",mNote:"A question leaves the list once you answer it correctly.",mMode:"My mistakes",
+foot:"B2 Prep · An independent study portal for the B2 module exams. Content follows the B2 word list and the grammar points in the syllabus.",foot2:"A student project, not affiliated with any university. Your progress is stored on this device only."},
+ar:{tagline:"بوابة التحضير للاختبارات",hkick:"وحدة B2 · برنامج التحضير",hh1:"حزمة تحضير لكل اختبار في الوحدة",hlead:"دراسة المفردات، واختبارات تجريبية مؤقّتة بنفس صيغة الامتحان، وتمارين يُشرح فيها كل خيار على حدة. بالتركية والإنجليزية والعربية.",hside:["طريقة الاستخدام","اختر اختبارك، وادرس الكلمات أولًا، ثم تدرّب وقِس مستواك باختبار تجريبي مؤقّت. تُحفظ أخطاؤك تلقائيًا في قائمة أخطائي."],htl:"اختبارات الوحدة",types:{pt:"اختبار تقدّم",eom:"اختبار نهاية الوحدة",prof:"اختبار الكفاءة"},avail:"متاح",soon:"قيد الإعداد",open:"افتح الحزمة",soonBtn:"قريبًا",pk1:"الوحدتان 1–2 · جمل الصلة",addw:"تشمل قائمة الكلمات الإضافية",feat:[["المفردات","بطاقات، وقائمة كلمات قابلة للبحث، ونطق صوتي."],["التمارين","تصحيح فوري وشرح لكل خيار."],["اختبار تجريبي","25 سؤالًا، 30 دقيقة، ومفتاح الإجابات في النهاية."],["أخطائي","تُحفظ الأسئلة التي أخطأت فيها لتعيد حلّها وحدها."]],
+crumb:"الاختبارات",kick:"اختبار التقدّم 1 · حزمة التحضير",h1:"اختبار التقدّم 1",lead:"Mentora English B2، الوحدة 1 (الرياضة) والوحدة 2 (علم النفس)، الفصلان 1–2. يُجرى الاختبار حضوريًا.",facts:[["25","سؤالًا"],["×4","مضاعف الدرجة"],["30","دقيقة"],["لا","امتحان تعويضي"]],scope:[["Reading","نص قراءة مفصّل مرتبط بموضوع الوحدة"],["Vocabulary","الوحدة 1 الرياضة · الوحدة 2 علم النفس، الفصلان 1–2"],["Grammar","جمل الصلة التعريفية وغير التعريفية، حذف الضمير، which للإشارة إلى موقف"]],progT:"تقدّمك",words:"كلمة",kKnown:"كلمات محفوظة",kPrac:"أفضل تمرين",kExam:"أفضل اختبار تجريبي",
+tabs:{cards:"البطاقات",list:"قائمة الكلمات",practice:"التمارين",exam:"اختبار تجريبي",gram:"القواعد",mist:"أخطائي"},
+all:"الكل",learn:"قيد التعلّم",tap:"اضغط لإظهار المعنى",forms:"صيغ الكلمة",prev:"السابق",flip:"اقلب",next:"التالي",shuf:"خلط",know:"أعرفها",unknow:"ليس بعد",say:"استمع",knownMark:"محفوظة",done:"لا توجد كلمات متبقية في هذا التصنيف.",flipLabel:"اقلب البطاقة",kbd1:"لوحة المفاتيح: <kbd>Space</kbd> قلب · <kbd>←</kbd><kbd>→</kbd> تنقّل · <kbd>K</kbd> أعرفها",
+search:"ابحث عن كلمة أو معنى",found:"كلمة",thW:"الكلمة",thM:"المعنى",thE:"مثال",
+modes:{mix:"مختلط",vocab:"المفردات",forms:"صيغ الكلمات",lex:"المتلازمات والمعاني",gram:"القواعد"},q:"السؤال",pts:"الدقّة",ok:"صحيح",bad:"خطأ",why:"لماذا كل خيار صحيح أو خاطئ",nextq:"السؤال التالي",see:"عرض النتيجة",res:"النتيجة",cor:"صحيحة",again:"مجموعة جديدة",yours:"إجابتك",right:"الإجابة الصحيحة",none:"فارغ",tagV:"مفردات",tagF:"صيغة الكلمة",tagL:"متلازمات ومعانٍ",tagG:"القواعد · جمل الصلة",full:"الجملة كاملة",means:"معناها",nofit:"المعنى لا يناسب هذه الجملة.",needs:"المطلوب هنا:",signal:"الدليل",rule:"القاعدة",notHere:"غير صحيح في هذه الجملة/العبارة.",kbd2:"لوحة المفاتيح: <kbd>1</kbd>–<kbd>4</kbd> اختيار · <kbd>Enter</kbd> متابعة",
+msg:[[80,"أنت جاهز للاختبار. راجع أخطاءك مرة أخرى."],[60,"تقدّم جيد. راجع المواضيع التي أخطأت فيها وجرّب مجموعة جديدة."],[0,"عد إلى البطاقات وملخّص القواعد ثم حاول مرة أخرى."]],
+exH:"اختبار تجريبي",exList:["25 سؤالًا: مفردات، صيغ الكلمات، متلازمات وقواعد","30 دقيقة؛ يُسلَّم الاختبار تلقائيًا عند انتهاء الوقت","لا تظهر الإجابات الصحيحة حتى تنهي الاختبار","يمكنك التنقّل بين الأسئلة وتغيير إجاباتك","الدرجة: 4 نقاط لكل إجابة صحيحة"],start:"ابدأ الاختبار",left:"الوقت المتبقي",answered:"تمت الإجابة",finish:"إنهاء الاختبار",sure:"أسئلة بلا إجابة. هل تريد الإنهاء؟",yes:"نعم، إنهاء",no:"العودة إلى الاختبار",timeup:"انتهى الوقت وتم تسليم الاختبار.",key:"مفتاح الإجابات",outOf:"/ 100",
+mH:"أخطائي",mEmpty:"لا توجد أخطاء محفوظة بعد. ستظهر هنا الأسئلة التي تخطئ فيها في التمارين أو الاختبار التجريبي.",mCount:"سؤالًا بانتظار المراجعة",mRetry:"أعد حلّ أخطائي",mClear:"مسح القائمة",mNote:"يُحذف السؤال من القائمة عندما تجيب عنه إجابة صحيحة.",mMode:"أخطائي",
+foot:"B2 Prep · بوابة دراسية مستقلة للتحضير لاختبارات وحدة B2. المحتوى مبني على قائمة مفردات B2 وموضوعات القواعد في المنهج.",foot2:"مشروع طلابي، غير تابع رسميًا لأي جامعة. يُحفظ تقدّمك على هذا الجهاز فقط."}
+};
+
+/* ---------- EXAMS IN THE MODULE: add each new pack here ---------- */
+const PACKS=[
+{id:'pt1',type:'pt',name:{tr:'Progress Test 1',en:'Progress Test 1',ar:'اختبار التقدّم 1'},desc:'pk1',V:V1,F:F1,L:L1,G:G1,GRAM:GRAM1,chn:{'U1 C1':'Fandom','U1 C2':'Esports','U2 C1':'Memory','U2 C2':'Anxiety'}},
+{id:'pt2',type:'pt',soon:true,name:{tr:'Progress Test 2',en:'Progress Test 2',ar:'اختبار التقدّم 2'}},
+{id:'pt3',type:'pt',soon:true,name:{tr:'Progress Test 3',en:'Progress Test 3',ar:'اختبار التقدّم 3'}},
+{id:'eom',type:'eom',soon:true,note:'addw',name:{tr:'End of Module',en:'End of Module',ar:'نهاية الوحدة'}},
+{id:'prof',type:'prof',soon:true,note:'addw',name:{tr:'Proficiency',en:'Proficiency',ar:'الكفاءة'}}
+];
+let P=null,V=[],F=[],L=[],G=[],VM={},CHN={};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const st={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const pk=k=>k+'_'+(P?P.id:'');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const idx=(arr,n)=>shuffle(arr.map((_,i)=>i)).slice(0,n);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LI={tr:0,en:1,ar:2};
+let lang=st.get('pp_lang','tr');if(!UI[lang])lang='tr';
+const t=k=>UI[lang][k];
+const mean=v=>lang==='tr'?`${esc(v.tr)} <span class="s">(${esc(v.en)})</span>`:lang==='ar'?`${esc(v.ar)} <span class="s" dir="ltr">(${esc(v.en)})</span>`:esc(v.en);
+const pc=c=>PC[c]?PC[c][LI[lang]]:c;
+const canSay=typeof window!=='undefined'&&'speechSynthesis' in window;
+const SPK='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10L5 10H2z" fill="currentColor"/><path d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.6a6 6 0 0 1 0 8.8" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>';
+function say(w){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='en-GB';u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+
+/* ---------- home ---------- */
+function renderHome(){
+$('#h-kick').textContent=t('hkick');$('#h-h1').textContent=t('hh1');$('#h-lead').textContent=t('hlead');
+$('#h-side').innerHTML=`<b>${t('hside')[0]}</b>${t('hside')[1]}`;$('#h-tl').textContent=t('htl');
+$('#tl').innerHTML=PACKS.map(p=>`<li class="${p.soon?'':'on'}"><span class="dot"></span><span class="st">${p.soon?t('soon'):t('avail')}</span><span class="nm">${esc(p.name[lang])}</span><span class="ty">${t('types')[p.type]}</span>${p.desc?`<span class="sc">${t(p.desc)}</span>`:p.note?`<span class="sc">${t(p.note)}</span>`:''}${p.soon?`<span class="ghost">${t('soonBtn')}</span>`:`<a href="#${p.id}">${t('open')}</a>`}</li>`).join('');
+$('#feat').innerHTML=t('feat').map((f,i)=>`<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}
+
+/* ---------- pack header ---------- */
+let tab=st.get('pp_tab2','cards');if(!['cards','list','practice','exam','gram','mist'].includes(tab))tab='cards';
+function renderPackHead(){
+$('#crumb').innerHTML=`<button id="crumb-b">${t('crumb')}</button> / ${esc(P.name[lang])}`;$('#crumb-b').addEventListener('click',()=>{location.hash=''});
+$('#kick').textContent=t('kick');$('#h1').textContent=P.name[lang];$('#lead').textContent=t('lead');
+$('#facts').innerHTML=t('facts').map(f=>`<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
+$('#scope').innerHTML=t('scope').map(s=>`<div><dt dir="ltr">${s[0]}</dt><dd style="margin:0">${s[1]}</dd></div>`).join('');
+renderTabs();renderProg()}
+function renderTabs(){const mc=mist().length;
+$('#tabs').innerHTML=Object.entries(t('tabs')).map(([k,l])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}${k==='mist'&&mc?`<span class="n">${mc}</span>`:''}</button>`).join('');
+['cards','list','practice','exam','gram','mist'].forEach(id=>$('#p-'+id).hidden=id!==tab)}
+function renderProg(){if(!P)return;
+const rows=Object.keys(CHN).map(c=>{const all=V.filter(v=>v.ch===c),k=all.filter(v=>known.has(v.w)).length;return `<div class="mrow"><span dir="ltr">${c} · ${CHN[c]}</span><span class="tr"><i style="width:${k/all.length*100}%"></i></span><b dir="ltr">${k}/${all.length}</b></div>`}).join('');
+const bp=Math.max(0,...Object.values(st.get(pk('pp_best'),{}))),be=st.get(pk('pp_bestE'),0);
+$('#prog').innerHTML=`<h3>${t('progT')}</h3>${rows}<div class="kpis"><div><b dir="ltr">${known.size}<small style="font-size:14px;color:var(--mut)">/${V.length}</small></b><span>${t('kKnown')}</span></div><div><b dir="ltr">${bp?bp+'%':'–'}</b><span>${t('kPrac')}</span></div><div><b dir="ltr">${be||'–'}</b><span>${t('kExam')}</span></div></div>`}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(!b)return;tab=b.dataset.t;st.set('pp_tab2',tab);renderTabs();if(tab==='mist')renderMist();if(tab==='list')renderList()});
+
+/* ---------- flashcards ---------- */
+let known=new Set(),cf='all',deck=[],ci=0,flipped=false;
+function chipList(cur){return [['all',t('all')],...Object.keys(CHN).map(c=>[c,`${c} · ${CHN[c]}`]),['learn',t('learn')]].map(([k,l])=>`<button class="${k===cur?'on':''}" data-c="${k}" ${k.startsWith('U')?'dir="ltr"':''}>${l}</button>`).join('')}
+function buildDeck(){deck=V.filter(v=>cf==='all'||(cf==='learn'?!known.has(v.w):v.ch===cf));ci=0;flipped=false;renderCard()}
+function renderCF(){$('#cf').innerHTML=chipList(cf)}
+$('#cf').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cf=b.dataset.c;renderCF();buildDeck()});
+function renderCard(){const c=$('#card');
+['prev','flip','next','shuf'].forEach(id=>$('#'+id).textContent=t(id));$('#card').setAttribute('aria-label',t('flipLabel'));$('#kbd1').innerHTML=t('kbd1');
+$('#sayc').hidden=!canSay;$('#sayc').innerHTML=SPK+t('say');
+if(!deck.length){c.innerHTML=`<div class="m" style="color:var(--mut)">${t('done')}</div>`;$('#cc').textContent='';$('#cbar').style.width='100%';$('#know').textContent=t('know');return}
+const v=deck[ci];$('#cc').textContent=`${ci+1} / ${deck.length}`;$('#cbar').style.width=((ci+1)/deck.length*100)+'%';
+$('#know').textContent=known.has(v.w)?t('unknow'):t('know');
+const foot=`<div class="foot"><span dir="ltr">${v.ch} · ${CHN[v.ch]}</span><span class="${known.has(v.w)?'known':''}">${known.has(v.w)?t('knownMark'):flipped?'':t('tap')}</span></div>`;
+c.innerHTML=flipped?`<div class="w" dir="ltr">${esc(v.w)}</div><div class="m">${lang==='tr'?esc(v.tr):lang==='ar'?esc(v.ar):esc(v.en)}</div>${lang!=='en'?`<div class="def" dir="ltr">${esc(v.en)}</div>`:''}<div class="ex" dir="ltr">${esc(v.ex.replace('___',v.ans))}</div>${v.frm?`<div class="frm">${t('forms')}: <span dir="ltr">${esc(v.frm)}</span></div>`:''}${foot}`
+:`<div class="w" dir="ltr">${esc(v.w)}</div><div class="pos">${pc(v.pos)}</div>${foot}`}
+const flip=()=>{flipped=!flipped;renderCard()};
+const mv=d=>{if(!deck.length)return;ci=(ci+d+deck.length)%deck.length;flipped=false;renderCard()};
+const toggleKnow=()=>{if(!deck.length)return;const w=deck[ci].w;known.has(w)?known.delete(w):known.add(w);st.set(pk('pp_known'),[...known]);
+if(cf==='learn'){deck=deck.filter(v=>!known.has(v.w));if(ci>=deck.length)ci=0}else ci=(ci+1)%deck.length;flipped=false;renderCard();renderProg()};
+$('#card').addEventListener('click',flip);$('#flip').addEventListener('click',flip);
+$('#next').addEventListener('click',()=>mv(1));$('#prev').addEventListener('click',()=>mv(-1));
+$('#shuf').addEventListener('click',()=>{deck=shuffle(deck);ci=0;flipped=false;renderCard()});
+$('#know').addEventListener('click',toggleKnow);$('#sayc').addEventListener('click',()=>{if(deck.length)say(deck[ci].w)});
+
+/* ---------- word list ---------- */
+let lf='all',lq='';
+function renderList(){$('#q').placeholder=t('search');$('#lf').innerHTML=chipList(lf);
+const n=lq.trim().toLowerCase();
+const rows=V.filter(v=>(lf==='all'||(lf==='learn'?!known.has(v.w):v.ch===lf))&&(!n||[v.w,v.tr,v.ar,v.en].some(x=>x.toLowerCase().includes(n))));
+$('#lc').textContent=`${rows.length} ${t('found')}`;
+$('#wl').innerHTML=`<thead><tr><th>${t('thW')}</th><th>${t('thM')}</th><th>${t('thE')}</th></tr></thead><tbody>${rows.map(v=>`<tr><td dir="ltr"><span class="wd">${esc(v.w)}</span>${canSay?`<button class="say" data-w="${esc(v.w)}" aria-label="${t('say')}">${SPK}</button>`:''}<span class="ps">${pc(v.pos)} · ${v.ch}</span></td><td>${lang==='tr'?esc(v.tr):lang==='ar'?esc(v.ar):''}${lang!=='en'?`<span class="ps" dir="ltr">${esc(v.en)}</span>`:esc(v.en)}</td><td dir="ltr"><span class="ex">${esc(v.ex.replace('___',v.ans))}</span>${v.frm?`<span class="ps">${esc(v.frm)}</span>`:''}</td></tr>`).join('')}</tbody>`}
+$('#q').addEventListener('input',e=>{lq=e.target.value;renderList()});
+$('#lf').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lf=b.dataset.c;renderList()});
+$('#wl').addEventListener('click',e=>{const b=e.target.closest('.say');if(b)say(b.dataset.w)});
+
+/* ---------- question builders (every option carries its own explanation) ---------- */
+const GRP=[['nervous','tense','uneasy','uncertain','alert'],['recall','retain','store'],['alter','transform','enhance'],['occasion','incident','phenomenon'],['spectator','opponent'],['genuine','devoted','subjective','faulty'],['considerably','highly','relatively','increasingly'],['widespread','annual'],['detect','determine','classify'],['hazard','concern'],['distressing','overwhelming','adverse'],['admit','insist'],['peak','extent'],['loyalty','sense'],['treatment','medication','care','meditation'],['existence','evolution']];
+const near=(a,b)=>a===b||GRP.some(g=>g.includes(a)&&g.includes(b));
+function qV(v){const pool=V.filter(x=>!near(x.w,v.w)&&x.pos===v.pos);const d=shuffle(pool.length>=3?pool:V.filter(x=>!near(x.w,v.w))).slice(0,3);
+const opts=shuffle([v,...d]).map(o=>({txt:o.w,ok:o===v,why:()=>o===v
+?`<b dir="ltr">${esc(o.w)}</b> (${pc(o.pos)}) ${t('means')}: ${mean(o)}`
+:`<b dir="ltr">${esc(o.w)}</b> (${pc(o.pos)}) ${t('means')}: ${mean(o)} → ${t('nofit')}${o.pos!==v.pos?` ${t('needs')} ${pc(v.pos)}.`:''}`}));
+return{id:'V:'+v.w,tag:'tagV',sub:`${v.ch} ${CHN[v.ch]}`,stem:v.ex,opts,full:v.ex.replace('___',v.ans)}}
+function qF(i){const[stem,need,clue,os]=F[i];
+const opts=shuffle(os.map(([w,c],j)=>({txt:w,ok:j===0,why:()=>j===0
+?`<b dir="ltr">${esc(w)}</b> = ${pc(c)}. ${t('signal')}: <span dir="ltr">${esc(clue)}</span>`
+:`<b dir="ltr">${esc(w)}</b> = ${pc(c)}. ${t('needs')} ${pc(need)} (<span dir="ltr">${esc(clue)}</span>).`})));
+return{id:'F:'+i,tag:'tagF',stem,opts,full:stem.replace('___',os[0][0])}}
+function qL(i){const[stem,ok,ws,key]=L[i];
+const ex=w=>{const v=VM[w];return v?`<b dir="ltr">${esc(w)}</b> ${t('means')}: ${mean(v)} → `:`<b dir="ltr">${esc(w)}</b> `};
+const opts=shuffle([ok,...ws].map((w,j)=>({txt:w,ok:j===0,why:()=>j===0
+?`<b dir="ltr">${esc(w)}</b>. ${t('rule')}: <span dir="ltr">${esc(key)}</span>`
+:`${ex(w)}${VM[w]?t('nofit'):t('notHere')} ${t('rule')}: <span dir="ltr">${esc(key)}</span>`})));
+return{id:'L:'+i,tag:'tagL',stem,opts,full:stem.includes('___')?stem.replace('___',ok):''}}
+function qG(i){const[stem,os]=G[i];
+const opts=shuffle(os.map(([w,r],j)=>({txt:w,ok:j===0,why:()=>`<b dir="ltr">${esc(w)}</b> — ${R[r][LI[lang]]}`})));
+return{id:'G:'+i,tag:'tagG',stem,opts,full:stem.includes('___')&&!stem.includes('?')?stem.replace('___',os[0][0]):''}}
+function fromId(id){const[k,r]=[id[0],id.slice(2)];if(k==='V')return VM[r]?qV(VM[r]):null;const i=+r;
+return k==='F'&&F[i]?qF(i):k==='L'&&L[i]?qL(i):k==='G'&&G[i]?qG(i):null}
+const mix=()=>shuffle([...idx(V,10).map(i=>qV(V[i])),...idx(F,4).map(qF),...idx(L,3).map(qL),...idx(G,8).map(qG)]);
+const stemHTML=s=>esc(s).replace('___','<u></u>');
+const optHTML=(q,cls)=>q.opts.map((o,i)=>`<button class="opt ${cls(o,i)}" data-i="${i}" dir="ltr"><span class="k">${'ABCD'[i]}</span><span>${esc(o.txt)}</span></button>`).join('');
+function whyHTML(q,p){return `<ul class="why">${q.opts.map((o,i)=>`<li class="${o.ok?'ok':''} ${i===p&&!o.ok?'mine':''}"><span class="ic">${o.ok?'✓':'✗'}</span><span>${o.why()}</span></li>`).join('')}</ul>`}
+
+/* ---------- mistake bank ---------- */
+const mist=()=>P?st.get(pk('pp_mist'),[]):[];
+const addMist=id=>{const m=mist();if(!m.includes(id)){m.push(id);st.set(pk('pp_mist'),m)}};
+const delMist=id=>st.set(pk('pp_mist'),mist().filter(x=>x!==id));
+function renderMist(){const m=mist();
+if(!m.length){$('#mb').innerHTML=`<h2>${t('mH')}</h2><div class="empty" style="margin-top:16px">${t('mEmpty')}</div>`;return}
+$('#mb').innerHTML=`<h2>${t('mH')}</h2><p class="muted">${m.length} ${t('mCount')} · ${t('mNote')}</p><div class="row"><button class="btn pri" id="mr">${t('mRetry')}</button><button class="btn" id="mc">${t('mClear')}</button></div>
+<div class="mlist">${m.map(id=>{const q=fromId(id);return q?`<div><span class="s">${t(q.tag)}</span><div dir="ltr">${stemHTML(q.stem)}</div></div>`:''}).join('')}</div>`;
+$('#mr').addEventListener('click',()=>{mode='mist';tab='practice';renderTabs();renderTF();makeSet()});
+$('#mc').addEventListener('click',()=>{st.set(pk('pp_mist'),[]);renderMist();renderTabs()})}
+
+/* ---------- practice ---------- */
+let mode='mix',Q=[],qi=0,score=0,pick=-1,wr=[];
+function makeSet(){
+Q=mode==='vocab'?idx(V,25).map(i=>qV(V[i])):mode==='forms'?idx(F,25).map(qF):mode==='lex'?idx(L,25).map(qL):mode==='gram'?idx(G,25).map(qG):mode==='mist'?shuffle(mist()).map(fromId).filter(Boolean):mix();
+qi=0;score=0;pick=-1;wr=[];renderQ()}
+function renderTF(){const M={...t('modes')};if(mode==='mist')M.mist=t('mMode');
+$('#tf').innerHTML=Object.entries(M).map(([k,l])=>`<button class="${k===mode?'on':''}" data-m="${k}">${l}</button>`).join('');$('#kbd2').innerHTML=t('kbd2')}
+$('#tf').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;renderTF();makeSet()});
+function renderQ(){
+if(!Q.length){$('#qa').innerHTML=`<div class="empty">${t('mEmpty')}</div>`;return}
+if(qi>=Q.length){const p=Math.round(score/Q.length*100);
+if(mode!=='mist'){const b=st.get(pk('pp_best'),{});if(!b[mode]||p>b[mode]){b[mode]=p;st.set(pk('pp_best'),b)}}renderProg();renderTabs();
+$('#qa').innerHTML=`<div class="result"><div class="score" dir="ltr">${p}%</div><div><h3>${t('res')}</h3><p><b dir="ltr">${score}/${Q.length}</b> ${t('cor')}. ${t('msg').find(m=>p>=m[0])[1]}</p><div class="row"><button class="btn pri" id="again">${t('again')}</button></div></div></div>${reviewHTML(wr.map(([q,i])=>[q,i]))}`;
+$('#again').addEventListener('click',makeSet);return}
+const q=Q[qi];
+$('#qa').innerHTML=`<div class="thin"><i style="width:${qi/Q.length*100}%"></i></div><div class="qhead"><span>${t('q')} <b dir="ltr">${qi+1}/${Q.length}</b> · ${t(q.tag)}${q.sub?` · <span dir="ltr">${q.sub}</span>`:''}</span><span>${t('pts')} <b dir="ltr">${qi?Math.round(score/qi*100)+'%':'–'}</b></span></div>
+<p class="stem" dir="ltr">${stemHTML(q.stem)}</p>${optHTML(q,(o,i)=>pick<0?'':o.ok?'ok':i===pick?'bad':'')}
+${pick>=0?`<div class="verdict ${q.opts[pick].ok?'ok':'bad'}">${q.opts[pick].ok?t('ok'):t('bad')}</div>${q.full?`<div class="full">${t('full')}: <b dir="ltr">${esc(q.full)}</b></div>`:''}<h3 style="font-size:16px;margin:16px 0 0">${t('why')}</h3>${whyHTML(q,pick)}<div class="row"><button class="btn pri" id="nq">${qi+1<Q.length?t('nextq'):t('see')}</button></div>`:''}`;
+$('#qa').querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>choose(+b.dataset.i)));
+const n=$('#nq');if(n)n.addEventListener('click',advance)}
+function choose(i){if(pick>=0||qi>=Q.length)return;const q=Q[qi];pick=i;
+if(q.opts[i].ok){score++;if(mode==='mist')delMist(q.id)}else{wr.push([q,i]);addMist(q.id)}renderQ();renderTabs();const n=$('#nq');if(n)n.focus({preventScroll:true})}
+function advance(){qi++;pick=-1;renderQ();$('#p-practice').scrollIntoView({block:'start'})}
+function reviewHTML(list){if(!list.length)return'';return `<div class="rev">${list.map(([q,p])=>{const c=q.opts.find(o=>o.ok),ok=p>=0&&q.opts[p].ok;
+return `<details class="${ok?'ok':''}"><summary><span class="ic">${ok?'✓':'✗'}</span><span><span dir="ltr">${stemHTML(q.stem)}</span><div class="ans">${t('yours')}: <b dir="ltr">${p>=0?esc(q.opts[p].txt):t('none')}</b> · ${t('right')}: <b dir="ltr">${esc(c.txt)}</b></div></span></summary><div class="body">${whyHTML(q,p)}</div></details>`}).join('')}</div>`}
+
+/* ---------- mock exam ---------- */
+const DUR=30*60*1000;let EX=null,tick=null,askEnd=false;
+function renderExam(){const x=$('#ex');
+if(!EX){x.innerHTML=`<div class="examstart"><h2>${t('exH')}</h2><ul>${t('exList').map(l=>`<li>${l}</li>`).join('')}</ul><button class="btn pri" id="exs">${t('start')}</button></div>`;
+$('#exs').addEventListener('click',()=>{EX={qs:mix(),a:Array(25).fill(-1),cur:0,end:Date.now()+DUR,done:false};askEnd=false;startTick();renderExam()});return}
+if(EX.done){const c=EX.qs.filter((q,i)=>EX.a[i]>=0&&q.opts[EX.a[i]].ok).length,p=c*4;
+x.innerHTML=`${EX.timeup?`<p class="confirm">${t('timeup')}</p>`:''}<div class="result"><div class="score" dir="ltr">${p}</div><div><h3>${t('res')} <span class="muted" dir="ltr">${t('outOf')}</span></h3><p><b dir="ltr">${c}/25</b> ${t('cor')}. ${t('msg').find(m=>p>=m[0])[1]}</p><div class="row"><button class="btn pri" id="exr">${t('again')}</button></div></div></div><h3 style="margin-top:22px">${t('key')}</h3>${reviewHTML(EX.qs.map((q,i)=>[q,EX.a[i]]))}`;
+$('#exr').addEventListener('click',()=>{EX=null;renderExam()});return}
+const q=EX.qs[EX.cur],an=EX.a.filter(v=>v>=0).length;
+x.innerHTML=`<div class="exbar"><span class="muted">${t('left')}</span><span class="timer" id="tm" dir="ltr"></span><span class="muted">${t('answered')} <b dir="ltr" style="color:var(--ink)">${an}/25</b></span><button class="btn pri sm end" id="exf">${t('finish')}</button></div>
+${askEnd?`<div class="confirm"><b dir="ltr">${25-an}</b> ${t('sure')}<div class="row"><button class="btn pri" id="ey">${t('yes')}</button><button class="btn" id="en">${t('no')}</button></div></div>`:''}
+<div class="pal">${EX.qs.map((_,i)=>`<button class="${EX.a[i]>=0?'a':''} ${i===EX.cur?'c':''}" data-j="${i}" dir="ltr">${i+1}</button>`).join('')}</div>
+<div class="qhead"><span>${t('q')} <b dir="ltr">${EX.cur+1}/25</b> · ${t(q.tag)}</span></div><p class="stem" dir="ltr">${stemHTML(q.stem)}</p>${optHTML(q,(o,i)=>EX.a[EX.cur]===i?'sel':'')}
+<div class="row"><button class="btn" id="ep" ${EX.cur?'':'disabled'}>${t('prev')}</button><button class="btn pri" id="enx" ${EX.cur<24?'':'disabled'}>${t('next')}</button></div>`;
+updTimer();
+x.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{EX.a[EX.cur]=+b.dataset.i;renderExam()}));
+x.querySelector('.pal').addEventListener('click',e=>{const b=e.target.closest('button');if(b){EX.cur=+b.dataset.j;renderExam()}});
+$('#ep').addEventListener('click',()=>{EX.cur--;renderExam()});$('#enx').addEventListener('click',()=>{EX.cur++;renderExam()});
+$('#exf').addEventListener('click',()=>{if(EX.a.includes(-1)){askEnd=true;renderExam()}else submit(false)});
+if(askEnd){$('#ey').addEventListener('click',()=>submit(false));$('#en').addEventListener('click',()=>{askEnd=false;renderExam()})}}
+function submit(timeup){if(!EX||EX.done)return;EX.done=true;EX.timeup=timeup;askEnd=false;clearInterval(tick);
+const c=EX.qs.filter((q,i)=>EX.a[i]>=0&&q.opts[EX.a[i]].ok).length*4;if(c>st.get(pk('pp_bestE'),0))st.set(pk('pp_bestE'),c);
+EX.qs.forEach((q,i)=>{if(!(EX.a[i]>=0&&q.opts[EX.a[i]].ok))addMist(q.id)});renderProg();renderTabs();renderExam();$('#p-exam').scrollIntoView({block:'start'})}
+function updTimer(){const e=$('#tm');if(!e||!EX)return;const ms=Math.max(0,EX.end-Date.now()),m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);
+e.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;e.classList.toggle('low',ms<5*60000)}
+function startTick(){clearInterval(tick);tick=setInterval(()=>{if(!EX||EX.done)return clearInterval(tick);if(Date.now()>=EX.end)submit(true);else updTimer()},1000)}
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown',e=>{if(!P||e.target.matches('input,textarea')||e.metaKey||e.ctrlKey||e.altKey)return;
+if(tab==='cards'){if(e.key===' '){e.preventDefault();flip()}else if(e.key==='ArrowRight')mv(lang==='ar'?-1:1);else if(e.key==='ArrowLeft')mv(lang==='ar'?1:-1);else if(e.key.toLowerCase()==='k')toggleKnow()}
+else if(tab==='practice'){if(/^[1-4]$/.test(e.key))choose(+e.key-1);else if(e.key==='Enter'&&pick>=0){e.preventDefault();advance()}}
+else if(tab==='exam'&&EX&&!EX.done&&/^[1-4]$/.test(e.key)){EX.a[EX.cur]=+e.key-1;renderExam()}});
+
+/* ---------- language, routing, boot ---------- */
+function renderAll(){
+document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+document.querySelectorAll('#lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang));
+$('#tagline').textContent=t('tagline');$('#foot').textContent=t('foot');$('#foot2').textContent=t('foot2');
+$('#home').hidden=!!P;$('#packv').hidden=!P;
+document.title=P?`${P.name[lang]} · B2 Prep`:'B2 Prep';
+if(!P){renderHome();return}
+renderPackHead();renderCF();renderCard();renderList();renderTF();renderQ();renderExam();renderMist();$('#p-gram').innerHTML=P.GRAM[lang]}
+$('#lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lang=b.dataset.l;st.set('pp_lang',lang);renderAll()});
+$('#home-link').addEventListener('click',()=>{location.hash=''});
+function route(){const p=PACKS.find(x=>x.id===location.hash.slice(1)&&!x.soon)||null;
+if(p&&p!==P){P=p;({V,F,L,G}=p);CHN=p.chn;VM=Object.fromEntries(V.map(v=>[v.w,v]));known=new Set(st.get(pk('pp_known'),[]));cf='all';lf='all';lq='';mode='mix';EX=null;clearInterval(tick);buildDeck();makeSet()}
+else if(!p)P=null;
+renderAll();window.scrollTo(0,0)}
+window.addEventListener('hashchange',route);route();
+}
+</script></body></html>
