@@ -60,6 +60,15 @@ button{cursor:pointer}
 .feat b{display:block;font-weight:600;margin-bottom:4px}
 .feat span{color:var(--mut);font-size:15px}
 .feat i{display:block;font:600 13px/1 Inter,sans-serif;font-style:normal;color:var(--pri);margin-bottom:12px}
+.sets{margin-top:44px}
+.setgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.setc{display:flex;flex-direction:column;gap:4px;border:1px solid var(--line);border-radius:12px;padding:18px;text-decoration:none;color:inherit;transition:border-color .15s}
+.setc:hover{border-color:var(--pri)}
+.setc .ty{font-size:12px;font-weight:600;color:var(--pri)}
+.setc .nm{font:600 21px/1.2 Newsreader,Georgia,serif}
+[dir=rtl] .setc .nm{font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:700}
+.setc .ds{font-size:14px;color:var(--mut)}
+.setc .go{margin-top:10px;font-size:14px;font-weight:600;color:var(--pri)}
 /* pack */
 .crumb{padding:22px 0 0;font-size:14px;color:var(--mut)}
 .crumb button{border:0;background:none;padding:0;color:var(--pri);font-weight:600;min-height:32px}
@@ -184,7 +193,7 @@ td .ex{font-family:Newsreader,Georgia,serif;font-style:italic;font-size:16px}
 footer{border-top:1px solid var(--line);color:var(--mut);font-size:13.5px}
 footer .frame{padding-block:22px 40px;display:flex;gap:20px;justify-content:space-between;flex-wrap:wrap}
 [hidden]{display:none!important}
-@media(max-width:900px){.intro,.phead{grid-template-columns:minmax(0,1fr);gap:22px}.feat{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.setgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.intro,.phead{grid-template-columns:minmax(0,1fr);gap:22px}.feat{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){
 .tl{grid-template-columns:minmax(0,1fr);padding-top:8px}.tl::before{top:8px;bottom:8px;inset-inline-start:11px;inset-inline-end:auto;width:2px;height:auto}
 .tl li{display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:16px;padding:0 0 26px}.tl li>*:not(.dot){grid-column:2}.tl .dot{grid-row:1/span 6}.tl .st{margin-top:2px}
@@ -193,7 +202,7 @@ footer .frame{padding-block:22px 40px;display:flex;gap:20px;justify-content:spac
 .result{grid-template-columns:minmax(0,1fr);gap:8px}
 table.stack thead{display:none}table.stack tr{display:grid;padding:12px 0;border-bottom:1px solid var(--line)}table.stack td{border:0;padding:2px 0}
 }
-@media(max-width:520px){.feat{grid-template-columns:minmax(0,1fr)}.fc{padding:24px 20px 46px}.fc .foot{inset-inline:20px}}
+@media(max-width:520px){.setgrid{grid-template-columns:minmax(0,1fr)}.feat{grid-template-columns:minmax(0,1fr)}.fc{padding:24px 20px 46px}.fc .foot{inset-inline:20px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head><body>
 <header class="top"><div class="frame">
@@ -206,6 +215,7 @@ table.stack thead{display:none}table.stack tr{display:grid;padding:12px 0;border
 <div class="intro"><div><div class="eyebrow" id="h-kick"></div><h1 id="h-h1"></h1><p class="lead" id="h-lead"></p></div><div class="side" id="h-side"></div></div>
 <h2 id="h-tl" style="font-size:20px;margin-top:10px"></h2>
 <ol class="tl" id="tl"></ol>
+<div class="sets"><h2 id="h-sets" style="font-size:20px"></h2><p class="muted" id="h-setsl" style="margin:4px 0 0"></p><div class="setgrid" id="sets"></div></div>
 <div class="feat" id="feat"></div>
 </section>
 </main>
@@ -491,9 +501,98 @@ ar:`<h3>أي كلمة لأي استخدام؟</h3><table><tr><th>الكلمة</t
 };
 function X(k,s){return `<span class="ex1 ${k}" dir="ltr">${s}</span>`}
 
+/* ---------- UNIT 3 · CHAPTER 1 (source: B2 Unit 3 Chapter 1.1 & 1.2 vocabulary slides) ---------- */
+const V3=[
+["U3 C1.1","censorship","n","sansür","رقابة","stopping people from saying or writing what they want because someone thinks it is bad or dangerous","Some people think that ___ protects children from harmful information.","censorship","censor (v) · self-censorship"],
+["U3 C1.1","hate speech","n","nefret söylemi","خطاب الكراهية","speech or writing that attacks or threatens a group, e.g. because of race or religion","We should all work together to stop ___ and promote kindness and respect.","hate speech",""],
+["U3 C1.1","bullying","n","zorbalık","التنمّر","using strength or power to frighten or hurt weaker people","Cyber-___ is when someone uses the internet or social media to hurt others.","bullying","bully (n/v) · cyber-bullying"],
+["U3 C1.1","offensive","adj","kırıcı, hakaret içeren","مسيء","very rude or insulting and likely to upset people","The programme contains language which some viewers may find ___.","offensive","offend (v) · find sth offensive · offensive language"],
+["U3 C1.1","misleading","adj","yanıltıcı","مضلِّل","making someone believe something that is not true","Some advertisements use ___ information to sell products that aren't very good.","misleading","mislead (v) · misleading information/advertisements"],
+["U3 C1.1","disinformation","n","dezenformasyon","تضليل إعلامي","false information spread on purpose","Fact-check information before you share it to make sure it's not ___.","disinformation","= misinformation"],
+["U3 C1.1","anonymous","adj","isimsiz, anonim","مجهول الهوية","made or done by someone whose name is not known","Police said an ___ caller warned that a bomb was about to go off.","anonymous","= nameless"],
+["U3 C1.1","prohibit","v","yasaklamak","يحظر","say that an action is illegal or not allowed","The policy ___ smoking on school grounds.","prohibits","= ban, forbid · prohibition (n) · be prohibited from doing sth"],
+["U3 C1.1","monitor","v","izlemek, denetlemek","يراقب","watch and check sth carefully over a period of time","The company routinely ___ all its employees' emails.","monitors","= observe"],
+["U3 C1.1","complicated","adj","karmaşık","معقّد","difficult to understand because it has many parts","The human brain is an incredibly ___ organ.","complicated","complicate (v), complication (n)"],
+["U3 C1.1","advocate","n","savunucu, destekçi","مدافع، مناصر","someone who publicly supports sb/sth","He's a strong ___ of human rights and freedom of speech.","advocate","advocate (v) · = supporter · ≠ opponent"],
+["U3 C1.2","election","n","seçim","انتخابات","a time when people vote to choose someone for an official job","The government plans to hold an ___ in November.","election","elect (v) · hold an election · free/fair election"],
+["U3 C1.2","vote","v","oy vermek","يصوّت","show which person, party or plan you support","In many countries, people have the right to ___ in an election.","vote","vote (n), voter (n) · vote for/against"],
+["U3 C1.2","riot","n","ayaklanma, isyan","شغب","a group of people behaving violently in public, often as a protest","Police used tear gas to put the ___ down.","riot",""],
+["U3 C1.2","extremist","n","aşırılıkçı","متطرّف","a person with radical ideas who is willing to use violence","The bomb was planted by right-wing ___.","extremists","extreme (adj) · political/religious extremists"],
+["U3 C1.2","defend","v","savunmak","يدافع","protect sb/sth against attack or criticism","We need to ___ democracy against fascism.","defend","≠ attack · defender (n)"],
+["U3 C1.2","liberal","adj","özgürlükçü, liberal","ليبرالي","supporting individual freedom and open to different ideas","She has ___ views on equal education and job opportunities.","liberal","≠ conservative · liberal attitudes/views"],
+["U3 C1.2","oppress","v","ezmek, baskı altında tutmak","يضطهد","treat a group unfairly and take away their rights","The dictator is accused of ___ the people in the country.","oppressing","oppressed, oppressive (adj), oppression (n)"],
+["U3 C1.2","unofficial","adj","resmî olmayan","غير رسمي","not from a person in authority or the government","___ sources report that four people were killed in the accident.","Unofficial","unofficially (adv) · official (adj)"],
+["U3 C1.2","disapprove","v","onaylamamak, karşı çıkmak","لا يوافق، يستنكر","feel that sb/sth is bad or wrong","Many parents ___ of violent video games.","disapprove","disapprove of · approve (v), (dis)approval (n)"],
+["U3 C1.2","protest","v","protesto etmek","يحتجّ","say or do sth publicly to show you disagree","Thousands of people blocked the street, ___ against the new law.","protesting","protest (n), protester (n) · protest about/against"],
+["U3 C1.2","speak out","phr","açıkça karşı çıkmak","يجاهر برأيه","state your opinion publicly, often against sth, with courage","She was fired for ___ against the management.","speaking out","speak out against sth"],
+["U3 C1.2","range","n","çeşitlilik, yelpaze","مجموعة، نطاق","a set of similar things","Voters support parties for a wide ___ of reasons.","range","a wide/broad/limited range of sth"]
+].map(a=>({ch:a[0],w:a[1],pos:a[2],tr:a[3],ar:a[4],en:a[5],ex:a[6],ans:a[7],frm:a[8]}));
+
+const F3=[
+["The government can ___ some websites and control what reaches the public.","v","can + ___",[["censor","v"],["censorship","n"],["censored","ved"],["censoring","ving"]]],
+["I said some things that might ___ her, and I regret it.","v","might + ___",[["offend","v"],["offensive","adj"],["offence","n"],["offensively","adv"]]],
+["Some advertisers try to ___ customers.","v","try to + ___",[["mislead","v"],["misleading","ing"],["misled","vpast"],["misleadingly","adv"]]],
+["There is a ___ on smoking in all public buildings.","n","a + ___ + on",[["prohibition","n"],["prohibit","v"],["prohibited","ved"],["prohibiting","ving"]]],
+["There were no ___ after the surgery.","npl","no + ___",[["complications","npl"],["complicate","v"],["complicated","adj"],["complicating","ving"]]],
+["Citizens will ___ a new president next year.","v","will + ___",[["elect","v"],["election","n"],["elected","vpast"],["electing","ving"]]],
+["Many young ___ stayed at home on election day.","nper","Many young + ___",[["voters","nper"],["vote","v"],["voted","vpast"],["voting","ving"]]],
+["The team's best ___ was injured in the first half.","nper","best + ___",[["defender","nper"],["defend","v"],["defensive","adj"],["defended","vpast"]]],
+["People lived in fear under an ___ regime.","adj","an + ___ + regime",[["oppressive","adj"],["oppress","v"],["oppression","n"],["oppressively","adv"]]],
+["The results were announced ___ before the press conference.","adv","were announced + ___",[["unofficially","adv"],["unofficial","adj"],["official","opp"],["officials","npl"]]],
+["Her parents showed their ___ by refusing to speak to him.","n","their + ___",[["disapproval","n"],["disapprove","v"],["disapproving","adj"],["disapprovingly","adv"]]],
+["The ___ gathered outside parliament.","nper","The + ___ + gathered",[["protesters","nper"],["protested","vpast"],["protesting","ving"],["protests","npl"]]],
+["The weather conditions on the mountain were ___.","adj","were + ___",[["extreme","adj"],["extremist","nper"],["extremism","n"],["extremely","adv"]]]
+];
+
+const S="Slide answer key: ";
+const L3=[
+["Social issues like hate speech and ___ are increasingly problematic in today's world.","bullying",["censorship","misleading","anonymous"],S+"bullying"],
+["___ messages spread on online platforms can harm individuals and communities.","Offensive",["Censorship","Bullying","Disinformation"],S+"offensive"],
+["Some argue for ___ to address these issues, while others fear it may suppress free speech.","censorship",["disinformation","bullying","hate speech"],S+"censorship"],
+["Others fear censorship may suppress free speech and promote ___.","disinformation",["offensive","anonymous","complicated"],S+"disinformation"],
+["Distinguishing between free speech and ___ information is crucial.","misleading",["bullying","censorship","prohibit"],S+"misleading"],
+["Many people feel the need to remain ___ when discussing sensitive topics online.","anonymous",["complicated","offensive","liberal"],S+"anonymous"],
+["This desire for privacy often ___ efforts to monitor harmful behaviour.","complicates",["prohibits","advocates","monitors"],S+"complicates"],
+["Privacy makes it harder to ___ and address harmful behaviour online.","monitor",["complicate","advocate","speak out"],S+"monitor"],
+["Others ___ for balanced measures to protect both freedom of expression and safety.","advocate",["monitor","prohibit","complicate"],S+"advocate"],
+["In many countries, people have the right to ___ in an election.","vote",["defend","oppress","monitor"],S+"vote"],
+["People have the right to vote in an ___.","election",["riot","range","advocate"],S+"election"],
+["Some choose ___ candidates to represent them, while others prefer conservatives.","liberal",["unofficial","anonymous","complicated"],S+"liberal"],
+["It's important to ___ the democratic process, even when there are disagreements.","defend",["oppress","prohibit","disapprove"],S+"defend"],
+["It's troubling when ___ groups cause problems, such as organizing a riot.","extremist",["complicated","election","range"],S+"extremist"],
+["Extremist groups sometimes cause problems, such as organizing a ___.","riot",["range","censorship","advocate"],S+"riot"],
+["There is a wide ___ of social issues that people need to address.","range",["riot","election","extremist"],S+"range"],
+["Many citizens feel the need to speak out and ___ against actions they disapprove of.","protest",["oppress","monitor","prohibit"],S+"protest"],
+["Citizens protest against actions they ___ of.","disapprove",["protest","defend","prohibit"],S+"disapprove"],
+["Sometimes these protests are ___, as people simply gather to express their concerns.","unofficial",["liberal","complicated","extremist"],S+"unofficial"],
+["Speaking out can be risky, especially if the government ___ its opponents.","oppresses",["protests","votes","advocates"],S+"oppresses"],
+["Some viewers may find this language ___.","offensive",["offended","offence","offend"],"find sth offensive"],
+["Students are prohibited ___ using phones during exams.","from",["to","of","at"],"be prohibited from doing sth"],
+["Most people voted ___ the new law, so it was rejected.","against",["for","to","at"],"vote for (= support) / vote against (= oppose)"],
+["My parents disapprove ___ my plans.","of",["with","about","to"],"disapprove of sth"],
+["Students protested ___ the rise in fees.","against",["at","of","to"],"protest against/about sth"],
+["Few people dared to speak out ___ the decision.","against",["to","of","at"],"speak out against sth"],
+["The shop sells a wide ___ of products.","range",["riot","election","advocate"],"a wide range of"],
+["The country will hold an ___ next spring.","election",["advocate","extremist","riot"],"hold an election"],
+["She is a strong ___ of free speech.","advocate",["riot","range","election"],"an advocate of sth"],
+["A synonym of \"prohibit\" is:","ban",["monitor","defend","oppress"],"prohibit = ban, forbid"],
+["A synonym of \"monitor\" is:","observe",["prohibit","advocate","protest"],"monitor = observe"],
+["A synonym of \"anonymous\" is:","nameless",["offensive","unofficial","liberal"],"anonymous = nameless"],
+["Another word for \"disinformation\" is:","misinformation",["censorship","hate speech","bullying"],"disinformation = misinformation"],
+["The opposite of \"liberal\" is:","conservative",["extremist","unofficial","complicated"],"liberal ≠ conservative"],
+["The opposite of \"defend\" is:","attack",["vote","monitor","prohibit"],"defend ≠ attack"],
+["The opposite of \"advocate\" (supporter) is:","opponent",["extremist","protest","election"],"advocate ≠ opponent"]
+];
+
+const U3META={
+tr:{kick:"Kelime seti · Unit 3 Social Issues",lead:"Mentora English B2, Unit 3 Chapter 1 kelimeleri (Part 1 ve Part 2). Ders slaytlarındaki boşluk doldurma metinleri de cümle cümle soruya çevrildi.",facts:[["23","kelime"],["2","bölüm"],["72","soru"],["3","dil"]],scope:[["Part 1","censorship, hate speech, bullying, offensive, misleading, disinformation, anonymous, prohibit, monitor, complicated, advocate"],["Part 2","election, vote, riot, extremist, defend, liberal, oppress, unofficial, disapprove, protest, speak out, range"],["Alıştırma","Slayt alıştırmaları, kelime formları, edat kalıpları, eş ve zıt anlamlılar"]]},
+en:{kick:"Vocabulary set · Unit 3 Social Issues",lead:"Mentora English B2, Unit 3 Chapter 1 vocabulary (Part 1 and Part 2). The gap-fill texts from the class slides are included as questions, sentence by sentence.",facts:[["23","words"],["2","parts"],["72","questions"],["3","languages"]],scope:[["Part 1","censorship, hate speech, bullying, offensive, misleading, disinformation, anonymous, prohibit, monitor, complicated, advocate"],["Part 2","election, vote, riot, extremist, defend, liberal, oppress, unofficial, disapprove, protest, speak out, range"],["Practice","Slide exercises, word forms, prepositions, synonyms and opposites"]]},
+ar:{kick:"مجموعة مفردات · الوحدة 3 القضايا الاجتماعية",lead:"Mentora English B2، مفردات الوحدة 3 الفصل 1 (الجزء 1 والجزء 2). أُدرجت نصوص ملء الفراغ من شرائح الدرس كأسئلة، جملةً جملة.",facts:[["23","كلمة"],["2","جزءان"],["72","سؤالًا"],["3","لغات"]],scope:[["Part 1","censorship, hate speech, bullying, offensive, misleading, disinformation, anonymous, prohibit, monitor, complicated, advocate"],["Part 2","election, vote, riot, extremist, defend, liberal, oppress, unofficial, disapprove, protest, speak out, range"],["التمارين","تمارين الشرائح، صيغ الكلمات، حروف الجر، المترادفات والأضداد"]]}
+};
+
 /* ---------- INTERFACE TEXT ---------- */
 const UI={
-tr:{tagline:"Sınav hazırlık portalı",hkick:"B2 modülü · Hazırlık programı",hh1:"Modüldeki her sınav için ayrı bir hazırlık paketi",hlead:"Kelime çalışması, gerçek formatta süreli deneme sınavı ve her şıkkın ayrı ayrı açıklandığı alıştırmalar. Türkçe, İngilizce ve Arapça.",hside:["Nasıl kullanılır","Sınavını seç, önce kelimeleri çalış, sonra alıştırma yap ve süreli deneme sınavıyla kendini ölç. Yanlışların otomatik olarak Hatalarım listesine kaydedilir."],htl:"Modül sınavları",types:{pt:"Progress test",eom:"Modül sonu sınavı",prof:"Yeterlik sınavı"},avail:"Hazır",soon:"Hazırlanıyor",open:"Pakete git",soonBtn:"Yakında",pk1:"Unit 1–2 · Relative clauses",addw:"Ek kelime listesi dahil",feat:[["Kelime çalışması","Kartlar, aranabilir kelime listesi ve sesli telaffuz."],["Alıştırma","Anında geri bildirim ve her şık için ayrı açıklama."],["Deneme sınavı","25 soru, 30 dakika, sınav sonunda cevap anahtarı."],["Hatalarım","Yanlış yaptığın sorular kaydedilir, sadece onları tekrar çöz."]],
+tr:{setsH:"Kelime setleri",setsL:"Ünite ünite kelime çalışması: kartlar, kelime listesi, alıştırma ve deneme sınavı.",tySet:"Kelime seti",pk3:"Social Issues · 23 kelime · slayt alıştırmaları",exV:"25 soru: kelime, kelime formu, kalıplar ve slayt alıştırmaları",tagline:"Sınav hazırlık portalı",hkick:"B2 modülü · Hazırlık programı",hh1:"Modüldeki her sınav için ayrı bir hazırlık paketi",hlead:"Kelime çalışması, gerçek formatta süreli deneme sınavı ve her şıkkın ayrı ayrı açıklandığı alıştırmalar. Türkçe, İngilizce ve Arapça.",hside:["Nasıl kullanılır","Sınavını seç, önce kelimeleri çalış, sonra alıştırma yap ve süreli deneme sınavıyla kendini ölç. Yanlışların otomatik olarak Hatalarım listesine kaydedilir."],htl:"Modül sınavları",types:{pt:"Progress test",eom:"Modül sonu sınavı",prof:"Yeterlik sınavı"},avail:"Hazır",soon:"Hazırlanıyor",open:"Pakete git",soonBtn:"Yakında",pk1:"Unit 1–2 · Relative clauses",addw:"Ek kelime listesi dahil",feat:[["Kelime çalışması","Kartlar, aranabilir kelime listesi ve sesli telaffuz."],["Alıştırma","Anında geri bildirim ve her şık için ayrı açıklama."],["Deneme sınavı","25 soru, 30 dakika, sınav sonunda cevap anahtarı."],["Hatalarım","Yanlış yaptığın sorular kaydedilir, sadece onları tekrar çöz."]],
 crumb:"Sınavlar",kick:"Progress Test 1 · Hazırlık paketi",h1:"Progress Test 1",lead:"Mentora English B2, Unit 1 (Sport) ve Unit 2 (Psychology), Chapter 1–2. Sınav yüz yüze yapılır.",facts:[["25","soru"],["×4","puan çarpanı"],["30","dakika"],["Yok","telafi sınavı"]],scope:[["Reading","Temaya bağlı, ayrıntılı okuma"],["Vocabulary","Unit 1 Sport · Unit 2 Psychology, Chapter 1–2"],["Grammar","Defining ve non-defining relative clauses, pronoun'un atılması, durumu anlatan which"]],progT:"İlerlemen",words:"kelime",kKnown:"Bilinen kelime",kPrac:"En iyi alıştırma",kExam:"En iyi deneme",
 tabs:{cards:"Kartlar",list:"Kelime listesi",practice:"Alıştırma",exam:"Deneme sınavı",gram:"Gramer",mist:"Hatalarım"},
 all:"Hepsi",learn:"Bilmediklerim",tap:"Anlamı için dokun",forms:"Formlar",prev:"Geri",flip:"Çevir",next:"İleri",shuf:"Karıştır",know:"Biliyorum",unknow:"Bilmiyorum",say:"Dinle",knownMark:"Biliniyor",done:"Bu filtrede çalışılacak kelime kalmadı.",flipLabel:"Kartı çevir",kbd1:"Klavye: <kbd>Boşluk</kbd> çevir · <kbd>←</kbd><kbd>→</kbd> gezin · <kbd>K</kbd> biliyorum",
@@ -503,7 +602,7 @@ msg:[[80,"Sınava hazırsın. Yanlışlarını bir kez daha gözden geçir."],[6
 exH:"Deneme sınavı",exList:["25 soru: kelime, kelime formu, kalıplar ve gramer","30 dakika süre; süre bitince sınav otomatik teslim edilir","Sınav bitene kadar doğru cevaplar gösterilmez","Sorular arasında gezinebilir, cevabını değiştirebilirsin","Puan: her doğru cevap 4 puan"],start:"Sınavı başlat",left:"Kalan süre",answered:"Cevaplanan",finish:"Sınavı bitir",sure:"boş soru var. Yine de bitirmek istiyor musun?",yes:"Evet, bitir",no:"Sınava dön",timeup:"Süre doldu, sınav teslim edildi.",key:"Cevap anahtarı",outOf:"/ 100",
 mH:"Hatalarım",mEmpty:"Henüz kayıtlı hatan yok. Alıştırmada veya deneme sınavında yanlış yaptığın sorular burada toplanır.",mCount:"soru tekrar bekliyor",mRetry:"Hatalarımı çöz",mClear:"Listeyi temizle",mNote:"Bir soruyu doğru çözdüğünde listeden çıkar.",mMode:"Hatalarım",
 foot:"B2 Prep · Modül sınavlarına hazırlık için bağımsız çalışma portalı. İçerik B2 kelime listesine ve programdaki gramer konularına göre hazırlanır.",foot2:"Öğrenci projesidir; herhangi bir üniversiteyle resmî bağlantısı yoktur. İlerlemen yalnızca bu cihazda saklanır."},
-en:{tagline:"Exam preparation portal",hkick:"B2 module · Preparation programme",hh1:"A preparation pack for every exam in the module",hlead:"Vocabulary study, timed mock exams in the real format, and practice where every option is explained. In Turkish, English and Arabic.",hside:["How to use it","Choose your exam, study the words first, then practise and test yourself with a timed mock exam. Your mistakes are saved automatically to My mistakes."],htl:"Module assessments",types:{pt:"Progress test",eom:"End-of-module exam",prof:"Proficiency exam"},avail:"Available",soon:"In preparation",open:"Open pack",soonBtn:"Coming soon",pk1:"Units 1–2 · Relative clauses",addw:"Includes the additional word list",feat:[["Vocabulary","Flashcards, a searchable word list and audio pronunciation."],["Practice","Instant feedback and an explanation for every option."],["Mock exam","25 questions, 30 minutes, answer key at the end."],["My mistakes","Questions you got wrong are saved so you can retry only those."]],
+en:{setsH:"Vocabulary sets",setsL:"Unit-by-unit vocabulary study: flashcards, word list, practice and a mock exam.",tySet:"Vocabulary set",pk3:"Social Issues · 23 words · slide exercises",exV:"25 questions: vocabulary, word forms, collocations and slide exercises",tagline:"Exam preparation portal",hkick:"B2 module · Preparation programme",hh1:"A preparation pack for every exam in the module",hlead:"Vocabulary study, timed mock exams in the real format, and practice where every option is explained. In Turkish, English and Arabic.",hside:["How to use it","Choose your exam, study the words first, then practise and test yourself with a timed mock exam. Your mistakes are saved automatically to My mistakes."],htl:"Module assessments",types:{pt:"Progress test",eom:"End-of-module exam",prof:"Proficiency exam"},avail:"Available",soon:"In preparation",open:"Open pack",soonBtn:"Coming soon",pk1:"Units 1–2 · Relative clauses",addw:"Includes the additional word list",feat:[["Vocabulary","Flashcards, a searchable word list and audio pronunciation."],["Practice","Instant feedback and an explanation for every option."],["Mock exam","25 questions, 30 minutes, answer key at the end."],["My mistakes","Questions you got wrong are saved so you can retry only those."]],
 crumb:"Exams",kick:"Progress Test 1 · Preparation pack",h1:"Progress Test 1",lead:"Mentora English B2, Unit 1 (Sport) and Unit 2 (Psychology), Chapters 1–2. The test is face-to-face.",facts:[["25","questions"],["×4","score multiplier"],["30","minutes"],["None","make-up exams"]],scope:[["Reading","A theme-related, detailed reading"],["Vocabulary","Unit 1 Sport · Unit 2 Psychology, Chapters 1–2"],["Grammar","Defining and non-defining relative clauses, omitting the pronoun, which referring to a situation"]],progT:"Your progress",words:"words",kKnown:"Words known",kPrac:"Best practice",kExam:"Best mock exam",
 tabs:{cards:"Flashcards",list:"Word list",practice:"Practice",exam:"Mock exam",gram:"Grammar",mist:"My mistakes"},
 all:"All",learn:"Still learning",tap:"Tap to reveal",forms:"Word forms",prev:"Back",flip:"Flip",next:"Next",shuf:"Shuffle",know:"I know it",unknow:"Not yet",say:"Listen",knownMark:"Known",done:"No words left to study in this filter.",flipLabel:"Flip card",kbd1:"Keyboard: <kbd>Space</kbd> flip · <kbd>←</kbd><kbd>→</kbd> move · <kbd>K</kbd> I know it",
@@ -513,7 +612,7 @@ msg:[[80,"You are ready for the test. Have one more look at your mistakes."],[60
 exH:"Mock exam",exList:["25 questions: vocabulary, word forms, collocations and grammar","30 minutes; the exam is submitted automatically when time runs out","Correct answers are hidden until you finish","You can move between questions and change your answers","Score: 4 points for each correct answer"],start:"Start the exam",left:"Time left",answered:"Answered",finish:"Finish exam",sure:"questions are blank. Finish anyway?",yes:"Yes, finish",no:"Back to the exam",timeup:"Time is up. Your exam has been submitted.",key:"Answer key",outOf:"/ 100",
 mH:"My mistakes",mEmpty:"No saved mistakes yet. Questions you get wrong in practice or in the mock exam will appear here.",mCount:"questions to review",mRetry:"Retry my mistakes",mClear:"Clear the list",mNote:"A question leaves the list once you answer it correctly.",mMode:"My mistakes",
 foot:"B2 Prep · An independent study portal for the B2 module exams. Content follows the B2 word list and the grammar points in the syllabus.",foot2:"A student project, not affiliated with any university. Your progress is stored on this device only."},
-ar:{tagline:"بوابة التحضير للاختبارات",hkick:"وحدة B2 · برنامج التحضير",hh1:"حزمة تحضير لكل اختبار في الوحدة",hlead:"دراسة المفردات، واختبارات تجريبية مؤقّتة بنفس صيغة الامتحان، وتمارين يُشرح فيها كل خيار على حدة. بالتركية والإنجليزية والعربية.",hside:["طريقة الاستخدام","اختر اختبارك، وادرس الكلمات أولًا، ثم تدرّب وقِس مستواك باختبار تجريبي مؤقّت. تُحفظ أخطاؤك تلقائيًا في قائمة أخطائي."],htl:"اختبارات الوحدة",types:{pt:"اختبار تقدّم",eom:"اختبار نهاية الوحدة",prof:"اختبار الكفاءة"},avail:"متاح",soon:"قيد الإعداد",open:"افتح الحزمة",soonBtn:"قريبًا",pk1:"الوحدتان 1–2 · جمل الصلة",addw:"تشمل قائمة الكلمات الإضافية",feat:[["المفردات","بطاقات، وقائمة كلمات قابلة للبحث، ونطق صوتي."],["التمارين","تصحيح فوري وشرح لكل خيار."],["اختبار تجريبي","25 سؤالًا، 30 دقيقة، ومفتاح الإجابات في النهاية."],["أخطائي","تُحفظ الأسئلة التي أخطأت فيها لتعيد حلّها وحدها."]],
+ar:{setsH:"مجموعات المفردات",setsL:"دراسة المفردات وحدةً وحدة: بطاقات، قائمة كلمات، تمارين واختبار تجريبي.",tySet:"مجموعة مفردات",pk3:"القضايا الاجتماعية · 23 كلمة · تمارين الشرائح",exV:"25 سؤالًا: مفردات، صيغ الكلمات، متلازمات وتمارين الشرائح",tagline:"بوابة التحضير للاختبارات",hkick:"وحدة B2 · برنامج التحضير",hh1:"حزمة تحضير لكل اختبار في الوحدة",hlead:"دراسة المفردات، واختبارات تجريبية مؤقّتة بنفس صيغة الامتحان، وتمارين يُشرح فيها كل خيار على حدة. بالتركية والإنجليزية والعربية.",hside:["طريقة الاستخدام","اختر اختبارك، وادرس الكلمات أولًا، ثم تدرّب وقِس مستواك باختبار تجريبي مؤقّت. تُحفظ أخطاؤك تلقائيًا في قائمة أخطائي."],htl:"اختبارات الوحدة",types:{pt:"اختبار تقدّم",eom:"اختبار نهاية الوحدة",prof:"اختبار الكفاءة"},avail:"متاح",soon:"قيد الإعداد",open:"افتح الحزمة",soonBtn:"قريبًا",pk1:"الوحدتان 1–2 · جمل الصلة",addw:"تشمل قائمة الكلمات الإضافية",feat:[["المفردات","بطاقات، وقائمة كلمات قابلة للبحث، ونطق صوتي."],["التمارين","تصحيح فوري وشرح لكل خيار."],["اختبار تجريبي","25 سؤالًا، 30 دقيقة، ومفتاح الإجابات في النهاية."],["أخطائي","تُحفظ الأسئلة التي أخطأت فيها لتعيد حلّها وحدها."]],
 crumb:"الاختبارات",kick:"اختبار التقدّم 1 · حزمة التحضير",h1:"اختبار التقدّم 1",lead:"Mentora English B2، الوحدة 1 (الرياضة) والوحدة 2 (علم النفس)، الفصلان 1–2. يُجرى الاختبار حضوريًا.",facts:[["25","سؤالًا"],["×4","مضاعف الدرجة"],["30","دقيقة"],["لا","امتحان تعويضي"]],scope:[["Reading","نص قراءة مفصّل مرتبط بموضوع الوحدة"],["Vocabulary","الوحدة 1 الرياضة · الوحدة 2 علم النفس، الفصلان 1–2"],["Grammar","جمل الصلة التعريفية وغير التعريفية، حذف الضمير، which للإشارة إلى موقف"]],progT:"تقدّمك",words:"كلمة",kKnown:"كلمات محفوظة",kPrac:"أفضل تمرين",kExam:"أفضل اختبار تجريبي",
 tabs:{cards:"البطاقات",list:"قائمة الكلمات",practice:"التمارين",exam:"اختبار تجريبي",gram:"القواعد",mist:"أخطائي"},
 all:"الكل",learn:"قيد التعلّم",tap:"اضغط لإظهار المعنى",forms:"صيغ الكلمة",prev:"السابق",flip:"اقلب",next:"التالي",shuf:"خلط",know:"أعرفها",unknow:"ليس بعد",say:"استمع",knownMark:"محفوظة",done:"لا توجد كلمات متبقية في هذا التصنيف.",flipLabel:"اقلب البطاقة",kbd1:"لوحة المفاتيح: <kbd>Space</kbd> قلب · <kbd>←</kbd><kbd>→</kbd> تنقّل · <kbd>K</kbd> أعرفها",
@@ -528,6 +627,7 @@ foot:"B2 Prep · بوابة دراسية مستقلة للتحضير لاختب�
 /* ---------- EXAMS IN THE MODULE: add each new pack here ---------- */
 const PACKS=[
 {id:'pt1',type:'pt',name:{tr:'Progress Test 1',en:'Progress Test 1',ar:'اختبار التقدّم 1'},desc:'pk1',V:V1,F:F1,L:L1,G:G1,GRAM:GRAM1,chn:{'U1 C1':'Fandom','U1 C2':'Esports','U2 C1':'Memory','U2 C2':'Anxiety'}},
+{id:'u3c1',type:'set',name:{tr:'Unit 3 · Chapter 1',en:'Unit 3 · Chapter 1',ar:'الوحدة 3 · الفصل 1'},desc:'pk3',V:V3,F:F3,L:L3,G:[],GRAM:null,meta:U3META,chn:{'U3 C1.1':'Part 1','U3 C1.2':'Part 2'}},
 {id:'pt2',type:'pt',soon:true,name:{tr:'Progress Test 2',en:'Progress Test 2',ar:'اختبار التقدّم 2'}},
 {id:'pt3',type:'pt',soon:true,name:{tr:'Progress Test 3',en:'Progress Test 3',ar:'اختبار التقدّم 3'}},
 {id:'eom',type:'eom',soon:true,note:'addw',name:{tr:'End of Module',en:'End of Module',ar:'نهاية الوحدة'}},
@@ -555,19 +655,23 @@ function say(w){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtteranc
 function renderHome(){
 $('#h-kick').textContent=t('hkick');$('#h-h1').textContent=t('hh1');$('#h-lead').textContent=t('hlead');
 $('#h-side').innerHTML=`<b>${t('hside')[0]}</b>${t('hside')[1]}`;$('#h-tl').textContent=t('htl');
-$('#tl').innerHTML=PACKS.map(p=>`<li class="${p.soon?'':'on'}"><span class="dot"></span><span class="st">${p.soon?t('soon'):t('avail')}</span><span class="nm">${esc(p.name[lang])}</span><span class="ty">${t('types')[p.type]}</span>${p.desc?`<span class="sc">${t(p.desc)}</span>`:p.note?`<span class="sc">${t(p.note)}</span>`:''}${p.soon?`<span class="ghost">${t('soonBtn')}</span>`:`<a href="#${p.id}">${t('open')}</a>`}</li>`).join('');
+$('#tl').innerHTML=PACKS.filter(p=>p.type!=='set').map(p=>`<li class="${p.soon?'':'on'}"><span class="dot"></span><span class="st">${p.soon?t('soon'):t('avail')}</span><span class="nm">${esc(p.name[lang])}</span><span class="ty">${t('types')[p.type]}</span>${p.desc?`<span class="sc">${t(p.desc)}</span>`:p.note?`<span class="sc">${t(p.note)}</span>`:''}${p.soon?`<span class="ghost">${t('soonBtn')}</span>`:`<a href="#${p.id}">${t('open')}</a>`}</li>`).join('');
+$('#h-sets').textContent=t('setsH');$('#h-setsl').textContent=t('setsL');
+$('#sets').innerHTML=PACKS.filter(p=>p.type==='set').map(p=>`<a class="setc" href="#${p.id}"><span class="ty">${t('tySet')}</span><span class="nm">${esc(p.name[lang])}</span><span class="ds">${t(p.desc)}</span><span class="go">${t('open')}</span></a>`).join('');
 $('#feat').innerHTML=t('feat').map((f,i)=>`<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}
 
 /* ---------- pack header ---------- */
 let tab=st.get('pp_tab2','cards');if(!['cards','list','practice','exam','gram','mist'].includes(tab))tab='cards';
 function renderPackHead(){
 $('#crumb').innerHTML=`<button id="crumb-b">${t('crumb')}</button> / ${esc(P.name[lang])}`;$('#crumb-b').addEventListener('click',()=>{location.hash=''});
-$('#kick').textContent=t('kick');$('#h1').textContent=P.name[lang];$('#lead').textContent=t('lead');
-$('#facts').innerHTML=t('facts').map(f=>`<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
-$('#scope').innerHTML=t('scope').map(s=>`<div><dt dir="ltr">${s[0]}</dt><dd style="margin:0">${s[1]}</dd></div>`).join('');
+const M=P.meta?P.meta[lang]:UI[lang];
+$('#kick').textContent=M.kick;$('#h1').textContent=P.name[lang];$('#lead').textContent=M.lead;
+$('#facts').innerHTML=M.facts.map(f=>`<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
+$('#scope').innerHTML=M.scope.map(s=>`<div><dt dir="ltr">${s[0]}</dt><dd style="margin:0">${s[1]}</dd></div>`).join('');
 renderTabs();renderProg()}
 function renderTabs(){const mc=mist().length;
-$('#tabs').innerHTML=Object.entries(t('tabs')).map(([k,l])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}${k==='mist'&&mc?`<span class="n">${mc}</span>`:''}</button>`).join('');
+if(tab==='gram'&&!P.GRAM)tab='cards';
+$('#tabs').innerHTML=Object.entries(t('tabs')).filter(([k])=>k!=='gram'||P.GRAM).map(([k,l])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}${k==='mist'&&mc?`<span class="n">${mc}</span>`:''}</button>`).join('');
 ['cards','list','practice','exam','gram','mist'].forEach(id=>$('#p-'+id).hidden=id!==tab)}
 function renderProg(){if(!P)return;
 const rows=Object.keys(CHN).map(c=>{const all=V.filter(v=>v.ch===c),k=all.filter(v=>known.has(v.w)).length;return `<div class="mrow"><span dir="ltr">${c} · ${CHN[c]}</span><span class="tr"><i style="width:${k/all.length*100}%"></i></span><b dir="ltr">${k}/${all.length}</b></div>`}).join('');
@@ -611,7 +715,7 @@ $('#lf').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
 $('#wl').addEventListener('click',e=>{const b=e.target.closest('.say');if(b)say(b.dataset.w)});
 
 /* ---------- question builders (every option carries its own explanation) ---------- */
-const GRP=[['nervous','tense','uneasy','uncertain','alert'],['recall','retain','store'],['alter','transform','enhance'],['occasion','incident','phenomenon'],['spectator','opponent'],['genuine','devoted','subjective','faulty'],['considerably','highly','relatively','increasingly'],['widespread','annual'],['detect','determine','classify'],['hazard','concern'],['distressing','overwhelming','adverse'],['admit','insist'],['peak','extent'],['loyalty','sense'],['treatment','medication','care','meditation'],['existence','evolution']];
+const GRP=[['nervous','tense','uneasy','uncertain','alert'],['recall','retain','store'],['alter','transform','enhance'],['occasion','incident','phenomenon'],['spectator','opponent'],['genuine','devoted','subjective','faulty'],['considerably','highly','relatively','increasingly'],['widespread','annual'],['detect','determine','classify'],['hazard','concern'],['distressing','overwhelming','adverse'],['admit','insist'],['peak','extent'],['loyalty','sense'],['treatment','medication','care','meditation'],['existence','evolution'],['hate speech','bullying'],['disinformation','misleading'],['protest','speak out','disapprove','riot'],['election','vote'],['prohibit','oppress']];
 const near=(a,b)=>a===b||GRP.some(g=>g.includes(a)&&g.includes(b));
 function qV(v){const pool=V.filter(x=>!near(x.w,v.w)&&x.pos===v.pos);const d=shuffle(pool.length>=3?pool:V.filter(x=>!near(x.w,v.w))).slice(0,3);
 const opts=shuffle([v,...d]).map(o=>({txt:o.w,ok:o===v,why:()=>o===v
@@ -634,7 +738,7 @@ const opts=shuffle(os.map(([w,r],j)=>({txt:w,ok:j===0,why:()=>`<b dir="ltr">${es
 return{id:'G:'+i,tag:'tagG',stem,opts,full:stem.includes('___')&&!stem.includes('?')?stem.replace('___',os[0][0]):''}}
 function fromId(id){const[k,r]=[id[0],id.slice(2)];if(k==='V')return VM[r]?qV(VM[r]):null;const i=+r;
 return k==='F'&&F[i]?qF(i):k==='L'&&L[i]?qL(i):k==='G'&&G[i]?qG(i):null}
-const mix=()=>shuffle([...idx(V,10).map(i=>qV(V[i])),...idx(F,4).map(qF),...idx(L,3).map(qL),...idx(G,8).map(qG)]);
+const mix=()=>G.length?shuffle([...idx(V,10).map(i=>qV(V[i])),...idx(F,4).map(qF),...idx(L,3).map(qL),...idx(G,8).map(qG)]):shuffle([...idx(V,11).map(i=>qV(V[i])),...idx(F,6).map(qF),...idx(L,8).map(qL)]);
 const stemHTML=s=>esc(s).replace('___','<u></u>');
 const optHTML=(q,cls)=>q.opts.map((o,i)=>`<button class="opt ${cls(o,i)}" data-i="${i}" dir="ltr"><span class="k">${'ABCD'[i]}</span><span>${esc(o.txt)}</span></button>`).join('');
 function whyHTML(q,p){return `<ul class="why">${q.opts.map((o,i)=>`<li class="${o.ok?'ok':''} ${i===p&&!o.ok?'mine':''}"><span class="ic">${o.ok?'✓':'✗'}</span><span>${o.why()}</span></li>`).join('')}</ul>`}
@@ -655,7 +759,7 @@ let mode='mix',Q=[],qi=0,score=0,pick=-1,wr=[];
 function makeSet(){
 Q=mode==='vocab'?idx(V,25).map(i=>qV(V[i])):mode==='forms'?idx(F,25).map(qF):mode==='lex'?idx(L,25).map(qL):mode==='gram'?idx(G,25).map(qG):mode==='mist'?shuffle(mist()).map(fromId).filter(Boolean):mix();
 qi=0;score=0;pick=-1;wr=[];renderQ()}
-function renderTF(){const M={...t('modes')};if(mode==='mist')M.mist=t('mMode');
+function renderTF(){const M={...t('modes')};if(!G.length)delete M.gram;if(mode==='mist')M.mist=t('mMode');
 $('#tf').innerHTML=Object.entries(M).map(([k,l])=>`<button class="${k===mode?'on':''}" data-m="${k}">${l}</button>`).join('');$('#kbd2').innerHTML=t('kbd2')}
 $('#tf').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;renderTF();makeSet()});
 function renderQ(){
@@ -679,7 +783,7 @@ return `<details class="${ok?'ok':''}"><summary><span class="ic">${ok?'✓':'✗
 /* ---------- mock exam ---------- */
 const DUR=30*60*1000;let EX=null,tick=null,askEnd=false;
 function renderExam(){const x=$('#ex');
-if(!EX){x.innerHTML=`<div class="examstart"><h2>${t('exH')}</h2><ul>${t('exList').map(l=>`<li>${l}</li>`).join('')}</ul><button class="btn pri" id="exs">${t('start')}</button></div>`;
+if(!EX){x.innerHTML=`<div class="examstart"><h2>${t('exH')}</h2><ul>${(G.length?t('exList'):[t('exV'),...t('exList').slice(1)]).map(l=>`<li>${l}</li>`).join('')}</ul><button class="btn pri" id="exs">${t('start')}</button></div>`;
 $('#exs').addEventListener('click',()=>{EX={qs:mix(),a:Array(25).fill(-1),cur:0,end:Date.now()+DUR,done:false};askEnd=false;startTick();renderExam()});return}
 if(EX.done){const c=EX.qs.filter((q,i)=>EX.a[i]>=0&&q.opts[EX.a[i]].ok).length,p=c*4;
 x.innerHTML=`${EX.timeup?`<p class="confirm">${t('timeup')}</p>`:''}<div class="result"><div class="score" dir="ltr">${p}</div><div><h3>${t('res')} <span class="muted" dir="ltr">${t('outOf')}</span></h3><p><b dir="ltr">${c}/25</b> ${t('cor')}. ${t('msg').find(m=>p>=m[0])[1]}</p><div class="row"><button class="btn pri" id="exr">${t('again')}</button></div></div></div><h3 style="margin-top:22px">${t('key')}</h3>${reviewHTML(EX.qs.map((q,i)=>[q,EX.a[i]]))}`;
@@ -717,7 +821,7 @@ $('#tagline').textContent=t('tagline');$('#foot').textContent=t('foot');$('#foot
 $('#home').hidden=!!P;$('#packv').hidden=!P;
 document.title=P?`${P.name[lang]} · B2 Prep`:'B2 Prep';
 if(!P){renderHome();return}
-renderPackHead();renderCF();renderCard();renderList();renderTF();renderQ();renderExam();renderMist();$('#p-gram').innerHTML=P.GRAM[lang]}
+renderPackHead();renderCF();renderCard();renderList();renderTF();renderQ();renderExam();renderMist();$('#p-gram').innerHTML=P.GRAM?P.GRAM[lang]:''}
 $('#lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lang=b.dataset.l;st.set('pp_lang',lang);renderAll()});
 $('#home-link').addEventListener('click',()=>{location.hash=''});
 function route(){const p=PACKS.find(x=>x.id===location.hash.slice(1)&&!x.soon)||null;
